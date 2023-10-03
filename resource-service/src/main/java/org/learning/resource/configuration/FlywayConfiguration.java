@@ -1,5 +1,6 @@
 package org.learning.resource.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.learning.resource.configuration.properties.DatabaseProperties;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
@@ -11,9 +12,11 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Configuration
+@Slf4j
 public class FlywayConfiguration {
 
     @Bean
@@ -21,12 +24,21 @@ public class FlywayConfiguration {
                                                           DatabaseProperties databaseProperties,
                                                           DataSourceProperties dataSourceProperties) {
         return new FlywayMigrationInitializer(flyway, (f) -> {
-            try {
-                String sql = String.format("CREATE DATABASE %s;", databaseProperties.getName());
+            String selectDatabaseSql = String.format("SELECT FROM pg_database WHERE datname = '%s'", databaseProperties.getName());
+            String createDatabaseSql = String.format("CREATE DATABASE %s", databaseProperties.getName());
 
-                DataSource dataSource = getDataSource(databaseProperties, dataSourceProperties);
-                Connection connection = dataSource.getConnection();
-                connection.prepareStatement(sql).execute();
+            DataSource dataSource = getDataSource(databaseProperties, dataSourceProperties);
+
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement selectDatabaseStatement = connection.prepareStatement(selectDatabaseSql);
+                 PreparedStatement createDatabaseStatement = connection.prepareStatement(createDatabaseSql)) {
+
+                if (!selectDatabaseStatement.executeQuery().next()) {
+                    createDatabaseStatement.executeUpdate();
+                    log.info("Database has been created: {}", databaseProperties.getName());
+                } else {
+                    log.info("Database already exists: {}", databaseProperties.getName());
+                }
 
                 if (flywayProperties.isEnabled()) {
                     flyway.migrate();
