@@ -3,7 +3,7 @@ package org.learning.resource.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.learning.resource.domain.Resource;
+import org.learning.resource.domain.ResourceEntity;
 import org.learning.resource.exception.ResourceNotFoundException;
 import org.learning.resource.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class ResourceController {
 
     @PostMapping(consumes = "audio/mpeg")
     public Map<String, Object> uploadResource(@RequestBody byte[] content) {
-        Resource resource = Resource.builder().content(content).build();
+        ResourceEntity resource = ResourceEntity.builder().content(content).build();
         resource = repository.save(resource);
 
         log.info("Resource is saved: {}", resource.getId());
@@ -37,7 +37,7 @@ public class ResourceController {
     @GetMapping("/{id}")
     public byte[] getResource(@PathVariable("id") @NonNull Integer id) {
         return repository.findById(id)
-                .map(Resource::getContent)
+                .map(ResourceEntity::getContent)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 

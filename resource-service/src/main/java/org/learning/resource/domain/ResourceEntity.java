@@ -16,7 +16,7 @@ import java.sql.Types;
 @AllArgsConstructor
 @Entity
 @Table(name = "resources")
-public class Resource {
+public class ResourceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_generator")
