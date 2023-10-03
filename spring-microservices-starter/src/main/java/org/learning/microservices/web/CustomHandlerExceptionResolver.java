@@ -1,7 +1,7 @@
-package org.learning.resource.web;
+package org.learning.microservices.web;
 
-import org.learning.resource.domain.ErrorResponse;
-import org.learning.resource.exception.ResourceNotFoundException;
+import org.learning.microservices.domain.ErrorResponse;
+import org.learning.microservices.exception.DataNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.time.Instant;
 @ControllerAdvice
 public class CustomHandlerExceptionResolver extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse errorResponse = createErrorResponse(ex, request, status);

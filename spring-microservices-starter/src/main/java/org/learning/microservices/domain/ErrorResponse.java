@@ -1,4 +1,4 @@
-package org.learning.resource.domain;
+package org.learning.microservices.domain;
 
 import lombok.Builder;
 import lombok.Data;

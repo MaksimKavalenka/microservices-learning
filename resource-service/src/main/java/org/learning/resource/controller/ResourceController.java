@@ -3,8 +3,8 @@ package org.learning.resource.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.resource.domain.ResourceEntity;
-import org.learning.resource.exception.ResourceNotFoundException;
 import org.learning.resource.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +38,7 @@ public class ResourceController {
     public byte[] getResource(@PathVariable("id") @NonNull Integer id) {
         return repository.findById(id)
                 .map(ResourceEntity::getContent)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+                .orElseThrow(() -> new DataNotFoundException(id));
     }
 
     @DeleteMapping

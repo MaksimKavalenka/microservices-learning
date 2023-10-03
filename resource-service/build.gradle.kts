@@ -21,12 +21,10 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation(files("libs/spring-microservices-starter-0.1.0.jar"))
 }
 
 tasks.getByName<Jar>("jar") {
     enabled = false
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

@@ -7,6 +7,10 @@ database:
   port: 5401
   name: resource_service
 
+flyway:
+  database:
+    create-if-not-exists: true
+
 server:
   port : 8081
   servlet:
