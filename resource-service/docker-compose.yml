@@ -8,3 +8,15 @@ services:
       POSTGRES_PASSWORD: admin
     ports:
       - "5401:5432"
+  application:
+    image: maksimkavalenka/resource-service:0.1.0
+    restart: on-failure
+    environment:
+      DATABASE_PORT: 5401
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres

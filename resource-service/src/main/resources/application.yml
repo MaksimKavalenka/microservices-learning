@@ -1,3 +1,8 @@
+database:
+  host: localhost
+  port: 5401
+  name: resource_service
+
 server:
   port : 8081
   servlet:
@@ -6,15 +11,36 @@ server:
 spring:
   datasource:
     hikari:
-      schema: resource
-    url: jdbc:postgresql://localhost:5401/resource
+      schema: resource_service
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+  flyway:
+    schemas: resource_service
+    table: schema_version
   jpa:
     database: POSTGRESQL
     hibernate:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
 
 ---
+
+# docker
+
+database:
+  host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# development
 
 spring:
   config:

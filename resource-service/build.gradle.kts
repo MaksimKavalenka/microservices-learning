@@ -3,9 +3,6 @@ plugins {
     id("org.springframework.boot") version "3.1.4"
 }
 
-group = "org.learning"
-version = "1.0-SNAPSHOT"
-
 apply(plugin = "io.spring.dependency-management")
 
 repositories {
@@ -27,6 +24,10 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }
 
 tasks.test {
