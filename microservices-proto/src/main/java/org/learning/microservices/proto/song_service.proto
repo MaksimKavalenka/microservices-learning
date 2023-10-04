@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "org.learning.microservices.proto.song";
+
+message SongRequest {
+  int32 request_id = 1;
+  string name = 2;
+  string artist = 3;
+  string album = 4;
+  string length = 5;
+  int32 year = 6;
+}
