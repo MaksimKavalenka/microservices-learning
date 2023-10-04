@@ -15,7 +15,10 @@ flyway:
 
 infrastructure:
   song-service:
-    url: http://localhost:8082
+    url: ${infrastructure.song-service.protocol}://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+    protocol: http
+    host: localhost
+    port: 8082
 
 server:
   port : 8081
@@ -46,6 +49,10 @@ spring:
 
 database:
   host: host.docker.internal
+
+infrastructure:
+  song-service:
+    host: host.docker.internal
 
 spring:
   config:

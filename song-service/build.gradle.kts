@@ -56,3 +56,8 @@ dependencies {
     implementation(project(":song-service-api"))
     implementation(files("libs/spring-microservices-starter-0.1.0.jar"))
 }
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
+    archiveClassifier.set("")
+}

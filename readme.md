@@ -34,3 +34,16 @@ docker-compose -f .\resource-service\docker-compose.yml up -d
 ```
 
 ---
+
+## Song Service
+
+### Installation Pack
+1. PostgreSQL (http://localhost:5402)
+2. Song Service (http://localhost:8082)
+
+### Startup
+```
+docker-compose -f .\song-service\docker-compose.yml up -d
+```
+
+---

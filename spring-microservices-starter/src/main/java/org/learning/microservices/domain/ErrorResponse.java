@@ -1,12 +1,12 @@
 package org.learning.microservices.domain;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Data
-@Builder
+@SuperBuilder
 public class ErrorResponse {
 
     private Instant timestamp;

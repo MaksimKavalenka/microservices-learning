@@ -1,18 +1,20 @@
 package org.learning.microservices.resource.controller;
 
-import lombok.NonNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.microservices.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.mapper.SongMapper;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.resource.util.FileParser;
 import org.learning.microservices.song.api.client.SongFeignClient;
 import org.learning.microservices.song.api.domain.SongRequest;
-import org.learning.microservices.resource.mapper.SongMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 
@@ -25,6 +27,7 @@ import java.util.Map;
 @RequestMapping("/v1/resources")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class ResourceController {
 
     private final ResourceRepository repository;
@@ -50,14 +53,14 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public byte[] getResource(@PathVariable("id") @NonNull Integer id) {
+    public byte[] getResource(@PathVariable("id") @Positive Integer id) {
         return repository.findById(id)
                 .map(ResourceEntity::getContent)
                 .orElseThrow(() -> new DataNotFoundException(id));
     }
 
     @DeleteMapping
-    public Map<String, Object> deleteResources(@RequestParam("id") @NonNull String id) {
+    public Map<String, Object> deleteResources(@RequestParam("id") @NotBlank String id) {
         List<Integer> ids = Arrays.stream(id.split(","))
                 .map(Integer::valueOf)
                 .toList();
@@ -69,6 +72,9 @@ public class ResourceController {
 
         repository.deleteAllById(ids);
         log.info("Resources are deleted: {}", ids);
+
+        songFeignClient.deleteSongs(id);
+        log.info("Songs are deleted: {}", ids);
 
         return Map.of("ids", ids);
     }

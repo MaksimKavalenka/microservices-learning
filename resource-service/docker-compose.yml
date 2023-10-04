@@ -13,6 +13,7 @@ services:
     restart: on-failure
     environment:
       DATABASE_PORT: 5401
+      INFRASTRUCTURE_SONGSERVICE_PORT: 8082
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
