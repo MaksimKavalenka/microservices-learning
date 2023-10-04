@@ -1,0 +1,65 @@
+application:
+  deletion:
+    limit: 200
+
+database:
+  host: localhost
+  port: 5402
+  name: song_service
+  schema: song_service
+
+flyway:
+  database:
+    create-if-not-exists: true
+
+server:
+  port : 8082
+  servlet:
+    contextPath: /api
+
+spring:
+  datasource:
+    hikari:
+      schema: ${database.schema}
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+  flyway:
+    schemas: ${database.schema}
+    table: schema_version
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
+
+---
+
+# docker
+
+database:
+  host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# development
+
+spring:
+  config:
+    activate:
+      on-profile: "development"
+  datasource:
+    username: admin
+    password: admin
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
