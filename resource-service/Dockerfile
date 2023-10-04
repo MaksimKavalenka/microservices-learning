@@ -1,4 +1,4 @@
 FROM amazoncorretto:17.0.8
-COPY /build/libs/resource-service-0.1.0.jar .
+COPY /build/libs/resource-service-0.1.0.jar resource-service.jar
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "resource-service-0.1.0.jar"]
+ENTRYPOINT ["java", "-jar", "resource-service.jar"]

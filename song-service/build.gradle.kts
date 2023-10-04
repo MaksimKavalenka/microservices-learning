@@ -15,6 +15,11 @@ allprojects {
         mavenCentral()
     }
 
+    dependencies {
+        annotationProcessor("org.projectlombok:lombok")
+        compileOnly("org.projectlombok:lombok")
+    }
+
     the<DependencyManagementExtension>().apply {
         imports {
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
@@ -42,12 +47,10 @@ dependencies {
 
     implementation("org.postgresql:postgresql")
 
-    annotationProcessor("org.projectlombok:lombok")
-    compileOnly("org.projectlombok:lombok")
-
     implementation("org.slf4j:slf4j-api")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation(project(":song-service-api"))

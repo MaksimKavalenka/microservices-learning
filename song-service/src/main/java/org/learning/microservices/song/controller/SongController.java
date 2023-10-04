@@ -29,6 +29,7 @@ public class SongController {
         SongEntity song = mapper.toSongEntity(songRequest);
         repository.save(song);
         log.info("Song is saved: {}", song.getResourceId());
+
         return Map.of("id", song.getResourceId());
     }
 

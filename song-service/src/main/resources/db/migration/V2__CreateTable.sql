@@ -3,7 +3,7 @@ CREATE TABLE songs (
     name TEXT,
     artist TEXT,
     album TEXT,
-    length TEXT,
+    length INT4,
     year INT4,
     PRIMARY KEY (resource_id)
 );

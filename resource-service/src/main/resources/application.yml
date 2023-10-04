@@ -1,15 +1,21 @@
 application:
-  deletion:
-    limit: 200
+  data:
+    deletion:
+      limit: 200
 
 database:
   host: localhost
   port: 5401
   name: resource_service
+  schema: resource_service
 
 flyway:
   database:
     create-if-not-exists: true
+
+infrastructure:
+  song-service:
+    url: http://localhost:8082
 
 server:
   port : 8081
@@ -19,10 +25,10 @@ server:
 spring:
   datasource:
     hikari:
-      schema: resource_service
+      schema: ${database.schema}
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
   flyway:
-    schemas: resource_service
+    schemas: ${database.schema}
     table: schema_version
   jpa:
     database: POSTGRESQL
