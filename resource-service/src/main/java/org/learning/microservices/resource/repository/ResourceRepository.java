@@ -1,6 +1,6 @@
-package org.learning.resource.repository;
+package org.learning.microservices.resource.repository;
 
-import org.learning.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.domain.ResourceEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ResourceRepository extends CrudRepository<ResourceEntity, Integer> {

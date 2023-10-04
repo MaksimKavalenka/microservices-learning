@@ -1,4 +1,4 @@
-package org.learning.resource.domain;
+package org.learning.microservices.resource.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

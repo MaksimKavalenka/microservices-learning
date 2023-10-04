@@ -1,4 +1,4 @@
-package org.learning.resource.controller;
+package org.learning.microservices.resource.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -6,12 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.learning.microservices.exception.DataNotFoundException;
+import org.learning.microservices.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.repository.ResourceRepository;
+import org.learning.microservices.resource.util.FileParser;
 import org.learning.microservices.song.api.client.SongFeignClient;
 import org.learning.microservices.song.api.domain.SongRequest;
-import org.learning.resource.domain.ResourceEntity;
-import org.learning.resource.mapper.SongMapper;
-import org.learning.resource.repository.ResourceRepository;
-import org.learning.resource.util.FileParser;
+import org.learning.microservices.resource.mapper.SongMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
