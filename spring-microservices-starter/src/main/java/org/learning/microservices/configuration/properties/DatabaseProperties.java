@@ -15,4 +15,6 @@ public class DatabaseProperties {
 
     private String name;
 
+    private String schema;
+
 }
