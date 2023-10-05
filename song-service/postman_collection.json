@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"resourceId\": \"1\",\r\n    \"name\": \"name\",\r\n    \"artist\": \"artist\",\r\n    \"album\": \"album\",\r\n    \"length\": 100,\r\n    \"year\": 2023\r\n}",
+					"raw": "{\r\n    \"resourceId\": 1,\r\n    \"name\": \"name\",\r\n    \"artist\": \"artist\",\r\n    \"album\": \"album\",\r\n    \"length\": 100,\r\n    \"year\": 2023\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
