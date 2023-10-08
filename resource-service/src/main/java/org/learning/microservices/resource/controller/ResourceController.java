@@ -70,6 +70,7 @@ public class ResourceController {
                     String.format("It is not allowed to delete more than %d resources in a single request", deletionLimit));
         }
 
+        ids = repository.getExistingIds(ids);
         repository.deleteAllById(ids);
         log.info("Resources are deleted: {}", ids);
 

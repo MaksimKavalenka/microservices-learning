@@ -63,6 +63,14 @@ spring:
 
 # development
 
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+
 spring:
   config:
     activate:

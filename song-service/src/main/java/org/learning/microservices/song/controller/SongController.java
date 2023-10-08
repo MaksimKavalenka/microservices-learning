@@ -58,6 +58,7 @@ public class SongController {
                     String.format("It is not allowed to delete more than %d songs in a single request", deletionLimit));
         }
 
+        ids = repository.getExistingIds(ids);
         repository.deleteAllById(ids);
         log.info("Songs are deleted: {}", ids);
 
