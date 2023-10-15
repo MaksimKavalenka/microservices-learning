@@ -1,4 +1,4 @@
 dependencies {
-    implementation("org.hibernate.validator:hibernate-validator")
-    implementation("org.springframework.cloud:spring-cloud-openfeign-core")
+    api("org.hibernate.validator:hibernate-validator")
+    api("org.springframework.boot:spring-boot-starter-web")
 }

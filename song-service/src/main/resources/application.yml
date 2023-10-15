@@ -3,27 +3,43 @@ application:
     limit: 200
 
 database:
-  host: localhost
-  port: 5402
-  name: song_service
-  schema: song_service
+  destination:
+    host: localhost
+    port: 5402
+    name: song_service
+    schema: song_service
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: localhost
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
 
 flyway:
   database:
     create-if-not-exists: true
 
 server:
-  port : 8082
+  port: 8082
   servlet:
     contextPath: /api
 
 spring:
+  application:
+    name: song-service
   datasource:
     hikari:
-      schema: ${database.schema}
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+      schema: ${database.destination.schema}
+    url: jdbc:postgresql://${database.destination.host}:${database.destination.port}/${database.destination.name}
   flyway:
-    schemas: ${database.schema}
+    schemas: ${database.destination.schema}
     table: schema_version
   jpa:
     database: POSTGRESQL
@@ -39,13 +55,35 @@ spring:
 
 # docker
 
+docker:
+  destination:
+    host: host.docker.internal
+
 database:
-  host: host.docker.internal
+  destination:
+    host: ${docker.destination.host}
+
+eureka:
+  destination:
+    host: ${docker.destination.host}
 
 spring:
   config:
     activate:
       on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
 
 ---
 

@@ -1,5 +1,11 @@
 version: '3.8'
 services:
+  eureka-server:
+    build: eureka-server
+    image: maksimkavalenka/eureka-server:0.1.0
+    restart: on-failure
+    ports:
+      - "${EUREKA_PORT}:8761"
   song-service-postgres:
     image: postgres
     restart: on-failure
@@ -9,17 +15,35 @@ services:
     ports:
       - "${SONG_SERVICE_DATABASE_PORT}:5432"
   song-service:
-    build: .
+    build: song-service
     image: maksimkavalenka/song-service:0.1.0
     restart: on-failure
     environment:
       DATABASE_PORT: ${SONG_SERVICE_DATABASE_PORT}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_APPLICATION_NAME: ${SONG_SERVICE_APPLICATION_NAME}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
-      - "${SONG_SERVICE_PORT}:8082"
+      - "${SONG_SERVICE_APPLICATION_PORT}:8082"
     depends_on:
+      - eureka-server
+      - song-service-postgres
+  song-service-replica:
+    build: song-service
+    image: maksimkavalenka/song-service:0.1.0
+    restart: on-failure
+    environment:
+      DATABASE_PORT: ${SONG_SERVICE_DATABASE_PORT}
+      SERVER_PORT: 8083
+      SPRING_APPLICATION_NAME: ${SONG_SERVICE_APPLICATION_NAME}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
       - song-service-postgres
   resource-service-postgres:
     image: postgres
@@ -30,17 +54,20 @@ services:
     ports:
       - "${RESOURCE_SERVICE_DATABASE_PORT}:5432"
   resource-service:
-    build: .
+    build: resource-service
     image: maksimkavalenka/resource-service:0.1.0
     restart: on-failure
     environment:
       DATABASE_PORT: ${RESOURCE_SERVICE_DATABASE_PORT}
-      INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_PORT}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      INFRASTRUCTURE_SONGSERVICE_ALIAS: ${SONG_SERVICE_APPLICATION_NAME}
+      INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_APPLICATION_PORT}
+      SPRING_APPLICATION_NAME: ${RESOURCE_SERVICE_APPLICATION_NAME}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
-      - "${RESOURCE_SERVICE_PORT}:8081"
+      - "${RESOURCE_SERVICE_APPLICATION_PORT}:8081"
     depends_on:
+      - eureka-server
       - resource-service-postgres
       - song-service

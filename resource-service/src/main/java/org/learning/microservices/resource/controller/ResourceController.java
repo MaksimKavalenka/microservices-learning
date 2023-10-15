@@ -7,11 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.learning.microservices.exception.DataNotFoundException;
+import org.learning.microservices.resource.client.SongServiceFeignClient;
 import org.learning.microservices.resource.domain.ResourceEntity;
 import org.learning.microservices.resource.mapper.SongMapper;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.resource.util.FileParser;
-import org.learning.microservices.song.api.client.SongFeignClient;
 import org.learning.microservices.song.api.domain.SongRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +32,7 @@ public class ResourceController {
 
     private final ResourceRepository repository;
 
-    private final SongFeignClient songFeignClient;
+    private final SongServiceFeignClient songService;
 
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
@@ -46,7 +46,7 @@ public class ResourceController {
         Metadata metadata = FileParser.getMp3Metadata(content);
         SongRequest songRequest = SongMapper.toSongRequest(resource.getId(), metadata);
 
-        songFeignClient.saveSong(songRequest);
+        songService.saveSong(songRequest);
         log.info("Song is saved: {}", songRequest.getResourceId());
 
         return Map.of("id", resource.getId());
@@ -74,7 +74,7 @@ public class ResourceController {
         repository.deleteAllById(ids);
         log.info("Resources are deleted: {}", ids);
 
-        songFeignClient.deleteSongs(id);
+        songService.deleteSongs(id);
         log.info("Songs are deleted: {}", ids);
 
         return Map.of("ids", ids);

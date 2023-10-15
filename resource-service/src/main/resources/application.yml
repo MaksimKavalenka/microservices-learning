@@ -4,10 +4,24 @@ application:
       limit: 200
 
 database:
-  host: localhost
-  port: 5401
-  name: resource_service
-  schema: resource_service
+  destination:
+    host: localhost
+    port: 5401
+    name: resource_service
+    schema: resource_service
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: localhost
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
 
 flyway:
   database:
@@ -15,23 +29,28 @@ flyway:
 
 infrastructure:
   song-service:
-    url: ${infrastructure.song-service.protocol}://${infrastructure.song-service.host}:${infrastructure.song-service.port}
-    protocol: http
+    alias: song-service
     host: localhost
     port: 8082
+    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
 
 server:
-  port : 8081
+  port: 8081
   servlet:
     contextPath: /api
 
 spring:
+  application:
+    name: resource-service
+  config:
+    discovery:
+      enabled: true
   datasource:
     hikari:
-      schema: ${database.schema}
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+      schema: ${database.destination.schema}
+    url: jdbc:postgresql://${database.destination.host}:${database.destination.port}/${database.destination.name}
   flyway:
-    schemas: ${database.schema}
+    schemas: ${database.destination.schema}
     table: schema_version
   jpa:
     database: POSTGRESQL
@@ -47,17 +66,39 @@ spring:
 
 # docker
 
-database:
-  host: host.docker.internal
-
-infrastructure:
-  song-service:
+docker:
+  destination:
     host: host.docker.internal
+
+database:
+  destination:
+    host: ${docker.destination.host}
+
+eureka:
+  destination:
+    host: ${docker.destination.host}
 
 spring:
   config:
     activate:
       on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+infrastructure:
+  song-service:
+    url: ""
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
 
 ---
 

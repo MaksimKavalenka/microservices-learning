@@ -2,12 +2,14 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 
 plugins {
     id("java")
+    id("java-library")
     id("org.springframework.boot") version "3.1.4"
 }
 
 allprojects {
     apply {
         plugin("java")
+        plugin("java-library")
         plugin("io.spring.dependency-management")
     }
 
@@ -52,6 +54,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
     implementation(project(":song-service-api"))
     implementation(files("libs/spring-microservices-starter-0.1.0.jar"))

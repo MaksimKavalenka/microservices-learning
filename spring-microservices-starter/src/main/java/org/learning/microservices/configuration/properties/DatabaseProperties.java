@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties("database")
+@ConfigurationProperties("database.destination")
 public class DatabaseProperties {
 
     private String host;
