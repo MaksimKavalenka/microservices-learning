@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: microservices-learning
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: song-service
+  namespace: microservices-learning
+  labels:
+    name: song-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: song-service
+  template:
+    metadata:
+      labels:
+        name: song-service
+    spec:
+      containers:
+      - name: song-service
+        image: maksimkavalenka/song-service:0.1.0
+        ports:
+        - containerPort: 8082
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-service
+spec:
+  type: NodePort
+  selector:
+    name: song-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      nodePort: 30082
