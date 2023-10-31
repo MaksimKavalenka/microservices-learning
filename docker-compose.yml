@@ -29,22 +29,6 @@ services:
     depends_on:
       - eureka-server
       - song-service-postgres
-  song-service-replica:
-    build: song-service
-    image: maksimkavalenka/song-service:0.1.0
-    restart: on-failure
-    environment:
-      DATABASE_PORT: ${SONG_SERVICE_DATABASE_PORT}
-      SERVER_PORT: 8083
-      SPRING_APPLICATION_NAME: ${SONG_SERVICE_APPLICATION_NAME}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-    ports:
-      - "8083:8083"
-    depends_on:
-      - eureka-server
-      - song-service-postgres
   resource-service-postgres:
     image: postgres
     restart: on-failure
