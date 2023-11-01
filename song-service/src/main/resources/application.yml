@@ -5,7 +5,7 @@ application:
 database:
   destination:
     host: localhost
-    port: 5402
+    port: 5432
     name: song_service
     schema: song_service
 
@@ -27,7 +27,7 @@ flyway:
     create-if-not-exists: true
 
 server:
-  port: 8082
+  port: 8080
   servlet:
     contextPath: /api
 
@@ -89,6 +89,10 @@ spring:
 
 # development
 
+database:
+  destination:
+    port: 5402
+
 logging:
   level:
     org:
@@ -96,6 +100,9 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+server:
+  port: 8082
 
 spring:
   config:

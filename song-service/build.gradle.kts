@@ -58,7 +58,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
     implementation(project(":song-service-api"))
-    implementation(files("libs/spring-microservices-starter-0.1.0.jar"))
+    implementation(files("libs/spring-microservices-starter-1.0.0.jar"))
 }
 
 tasks.getByName<Jar>("jar") {

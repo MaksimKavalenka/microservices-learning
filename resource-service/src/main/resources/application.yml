@@ -6,7 +6,7 @@ application:
 database:
   destination:
     host: localhost
-    port: 5401
+    port: 5432
     name: resource_service
     schema: resource_service
 
@@ -31,11 +31,10 @@ infrastructure:
   song-service:
     alias: song-service
     host: localhost
-    port: 8082
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
 
 server:
-  port: 8081
+  port: 8080
   servlet:
     contextPath: /api
 
@@ -104,6 +103,14 @@ spring:
 
 # development
 
+database:
+  destination:
+    port: 5401
+
+infrastructure:
+  song-service:
+    port: 8082
+
 logging:
   level:
     org:
@@ -111,6 +118,9 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+server:
+  port: 8081
 
 spring:
   config:

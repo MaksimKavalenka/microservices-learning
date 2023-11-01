@@ -30,8 +30,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
-    implementation(files("libs/spring-microservices-starter-0.1.0.jar"))
-    implementation(files("libs/song-service-api-0.1.0.jar"))
+    implementation(files("libs/spring-microservices-starter-1.0.0.jar"))
+    implementation(files("libs/song-service-api-1.0.0.jar"))
 }
 
 the<DependencyManagementExtension>().apply {
