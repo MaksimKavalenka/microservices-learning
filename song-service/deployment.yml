@@ -88,8 +88,8 @@ metadata:
   name: song-service-configmap
   namespace: microservices-learning
 data:
+  DATABASE_DESTINATION_HOST: song-service-postgres.microservices-learning
   SPRING_APPLICATION_NAME: song-service
-  SPRING_DATASOURCE_URL: jdbc:postgresql://song-service-postgres
 
 ---
 
@@ -136,6 +136,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: song-service
+  namespace: microservices-learning
 spec:
   type: NodePort
   selector:
@@ -144,4 +145,4 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30080
+      nodePort: 30082
