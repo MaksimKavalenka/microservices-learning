@@ -27,6 +27,9 @@ metadata:
   namespace: microservices-learning
 type: Opaque
 data:
+  PGUSER: cG9zdGdyZXM=
+  PGPASSWORD: cG9zdGdyZXM=
+  PGDATABASE: cG9zdGdyZXM=
   POSTGRES_USER: cG9zdGdyZXM=
   POSTGRES_PASSWORD: cG9zdGdyZXM=
   POSTGRES_DB: cG9zdGdyZXM=
@@ -58,6 +61,22 @@ spec:
         envFrom:
         - secretRef:
             name: song-service-postgres-secret
+        startupProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
         volumeMounts:
           - name: postgres-volume-mount
             mountPath: /var/lib/postgresql/data
