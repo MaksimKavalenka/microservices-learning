@@ -53,7 +53,8 @@ spec:
       - name: postgres
         image: postgres
         ports:
-        - containerPort: 5432
+        - name: postgres-port
+          containerPort: 5432
         envFrom:
         - secretRef:
             name: resource-service-postgres-secret
@@ -78,7 +79,7 @@ spec:
   ports:
     - protocol: TCP
       port: 5432
-      targetPort: 5432
+      targetPort: postgres-port
 
 ---
 
@@ -114,8 +115,10 @@ spec:
       containers:
       - name: resource-service
         image: maksimkavalenka/resource-service:1.0.0
+        imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - name: service-port
+          containerPort: 8080
         env:
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
@@ -130,6 +133,24 @@ spec:
         envFrom:
         - configMapRef:
             name: resource-service-configmap
+        startupProbe:
+          httpGet:
+            path: /api/actuator/health
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          httpGet:
+            path: /api/actuator/health
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
 
 ---
 
@@ -145,5 +166,5 @@ spec:
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8080
+      targetPort: service-port
       nodePort: 30081

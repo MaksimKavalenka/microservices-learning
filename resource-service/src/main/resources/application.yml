@@ -128,8 +128,8 @@ spring:
     activate:
       on-profile: "development"
   datasource:
-    username: admin
-    password: admin
+    username: postgres
+    password: postgres
   jpa:
     show-sql: true
     properties:
