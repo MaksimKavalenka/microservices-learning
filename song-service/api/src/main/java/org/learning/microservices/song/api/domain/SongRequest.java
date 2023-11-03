@@ -25,6 +25,9 @@ public class SongRequest {
     private String artist;
 
     @NotBlank
+    private String genre;
+
+    @NotBlank
     private String album;
 
     @NotNull

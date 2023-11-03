@@ -23,6 +23,8 @@ public class SongEntity {
 
     private String artist;
 
+    private String genre;
+
     private String album;
 
     private Integer length;
