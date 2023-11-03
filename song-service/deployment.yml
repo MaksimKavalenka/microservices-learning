@@ -125,6 +125,11 @@ spec:
   selector:
     matchLabels:
       name: song-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
   template:
     metadata:
       labels:

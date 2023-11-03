@@ -126,6 +126,11 @@ spec:
   selector:
     matchLabels:
       name: resource-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
   template:
     metadata:
       labels:
