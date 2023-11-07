@@ -19,11 +19,10 @@ metadata:
   name: resource-service
   namespace: {{ .Release.Namespace }}
 spec:
-  type: NodePort
   selector:
     name: resource-service
   ports:
-    - protocol: TCP
+    - name: web-port
+      protocol: TCP
       port: 8080
       targetPort: service-port
-      nodePort: 30081
