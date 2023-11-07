@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-service-postgres
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: song-service-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: postgres-port
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: NodePort
+  selector:
+    name: song-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: service-port
+      nodePort: 30082

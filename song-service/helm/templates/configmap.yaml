@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: song-service-configmap
+  namespace: {{ .Release.Namespace }}
+  {{- template "song-service.labels" . }}
+data:
+  DATABASE_DESTINATION_HOST: song-service-postgres.{{ .Release.Namespace }}
+  SPRING_APPLICATION_NAME: song-service

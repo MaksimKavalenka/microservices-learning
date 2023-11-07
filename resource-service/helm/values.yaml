@@ -1,0 +1,19 @@
+database:
+  expose:
+    port: 5432
+  image:
+    name: postgres
+  resources:
+    requests:
+      storage: 1Gi
+
+service:
+  expose:
+    port: 8080
+    api:
+      health: /api/actuator/health
+  image:
+    name: maksimkavalenka/resource-service
+    tag: 1.0.0
+  deployment:
+    replicas: 2

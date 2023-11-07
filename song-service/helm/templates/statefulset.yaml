@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: song-service-postgres
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: song-service-postgres
+spec:
+  selector:
+    matchLabels:
+      name: song-service-postgres
+  template:
+    metadata:
+      labels:
+        name: song-service-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.database.image.name }}
+        ports:
+        - name: postgres-port
+          containerPort: {{ .Values.database.expose.port }}
+        envFrom:
+        - secretRef:
+            name: song-service-postgres-secret
+        startupProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        volumeMounts:
+          - name: postgres-volume-mount
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: song-service-postgres-pvc
