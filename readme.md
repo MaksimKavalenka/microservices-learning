@@ -1,6 +1,10 @@
 # Microservices Learning
 
-## Startup
+## Helm Charts
+
+For more information, see [the reference](https://maksimkavalenka.github.io/microservices-learning/).
+
+## Docker Startup
 ```
 docker-compose -f .\docker-compose.yml up -d
 ```
