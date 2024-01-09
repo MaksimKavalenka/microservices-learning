@@ -6,6 +6,6 @@ entries:
     digest: e6f02d7f91c77394c3e4ed7fe33cf54745ae5489333ef6f181d289831ed8aa2a
     name: resource-service
     urls:
-    - resource-service-1.0.0.tgz
+    - https://maksimkavalenka.github.io/microservices-learning/helm-repository/resource-service/resource-service-1.0.0.tgz
     version: 1.0.0
 generated: "2024-01-09T17:57:31.2997914+03:00"
