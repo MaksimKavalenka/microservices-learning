@@ -1,0 +1,19 @@
+apiVersion: v1
+entries:
+  resource-service:
+  - apiVersion: v2
+    created: "2024-01-09T18:23:42.4396772+03:00"
+    digest: e6f02d7f91c77394c3e4ed7fe33cf54745ae5489333ef6f181d289831ed8aa2a
+    name: resource-service
+    urls:
+    - resource-service-1.0.0.tgz
+    version: 1.0.0
+  song-service:
+  - apiVersion: v2
+    created: "2024-01-09T18:23:42.4396772+03:00"
+    digest: b312f988f678343564a8fc456d106d8c3117dac1e8ad5ff66c0323eb7190749a
+    name: song-service
+    urls:
+    - song-service-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-01-09T18:23:42.4396772+03:00"
