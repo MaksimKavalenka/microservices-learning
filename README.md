@@ -1,8 +1,8 @@
 # Microservices Learning
 
 ## Helm Charts
-
-For more information, see [the reference](https://maksimkavalenka.github.io/microservices-learning/).
+- [Microservices Learning](https://maksimkavalenka.github.io/microservices-learning)
+- [LocalStack](https://localstack.github.io/helm-charts)
 
 ## Docker Startup
 ```
