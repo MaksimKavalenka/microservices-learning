@@ -4,6 +4,9 @@ metadata:
   name: song-service-postgres-pvc
   namespace: {{ .Release.Namespace }}
 spec:
+  selector:
+    matchLabels:
+      name: microservices-learning
   accessModes:
     - ReadWriteOnce
     - ReadOnlyMany
