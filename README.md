@@ -7,5 +7,5 @@ This repository contains packaged Helm charts provided by Maksim Kavalenka.
 
 ## Install Packages
 `$ helm install infrastructure microservices-learning/infrastructure`  
-`$ helm install song-service microservices-learning/song-service`  
-`$ helm install resource-service microservices-learning/resource-service`
+`$ helm install song-service microservices-learning/song-service -n microservices-learning`  
+`$ helm install resource-service microservices-learning/resource-service -n microservices-learning`
