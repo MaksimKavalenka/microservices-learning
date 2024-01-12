@@ -4,12 +4,10 @@ metadata:
   name: resource-service-postgres-pvc
   namespace: {{ .Release.Namespace }}
 spec:
-  selector:
-    matchLabels:
-      name: microservices-learning
+  storageClassName: manual
   accessModes:
-    - ReadWriteOnce
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.database.resources.requests.storage }}
+  volumeName: resource-service-postgres-pv
