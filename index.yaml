@@ -1,27 +1,19 @@
 apiVersion: v1
 entries:
-  infrastructure:
-  - apiVersion: v2
-    created: "2024-01-11T19:05:02.6757056+03:00"
-    digest: d105c614ff4b2a426bfc81421d3726703de11ce7db936e4640d4390fca06dce9
-    name: infrastructure
-    urls:
-    - repo/infrastructure-1.0.0.tgz
-    version: 1.0.0
   resource-service:
   - apiVersion: v2
-    created: "2024-01-11T19:05:02.6757056+03:00"
-    digest: fb500daf2884913bd22ff5bbac411114817c5bce39b062c3226b4e2473424076
+    created: "2024-01-13T02:09:22.0509972+03:00"
+    digest: c38f4e738678eec66d953231526af287ef99f4179dec371fe9767e079285fee7
     name: resource-service
     urls:
     - repo/resource-service-1.0.0.tgz
     version: 1.0.0
   song-service:
   - apiVersion: v2
-    created: "2024-01-11T19:05:02.6757056+03:00"
-    digest: 0791fc451c3417120e063b7b41ea307eb3fbe691f60cd2092d1c995c7be6a884
+    created: "2024-01-13T02:09:22.0509972+03:00"
+    digest: 5adf05dcf2f76fb255abd25f8d6e575d661aa39c32c7d260f6b647d205e534f8
     name: song-service
     urls:
     - repo/song-service-1.0.0.tgz
     version: 1.0.0
-generated: "2024-01-11T19:05:02.6757056+03:00"
+generated: "2024-01-13T02:09:22.0504786+03:00"
