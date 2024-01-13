@@ -1,0 +1,38 @@
+infrastructure:
+  song-service:
+    alias: song-service
+    host: localhost
+    port: 8080
+    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: resource-processor
+  config:
+    discovery:
+      enabled: true
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
+
+---
+
+# development
+
+infrastructure:
+  song-service:
+    port: 8082
+
+server:
+  port: 8083
+
+spring:
+  config:
+    activate:
+      on-profile: "development"
