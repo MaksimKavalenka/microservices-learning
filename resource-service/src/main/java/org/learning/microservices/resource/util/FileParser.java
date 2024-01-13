@@ -20,8 +20,8 @@ public class FileParser {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
         ParseContext parseContext = new ParseContext();
 
-        Mp3Parser Mp3Parser = new Mp3Parser();
-        Mp3Parser.parse(inputStream, handler, metadata, parseContext);
+        Mp3Parser mp3Parser = new Mp3Parser();
+        mp3Parser.parse(inputStream, handler, metadata, parseContext);
 
         return metadata;
     }
