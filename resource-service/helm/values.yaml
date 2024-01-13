@@ -1,3 +1,9 @@
+aws:
+  destination:
+    host: localstack
+  s3:
+    bucketName: resources
+
 database:
   expose:
     port: 5432
@@ -14,6 +20,6 @@ service:
       health: /api/actuator/health
   image:
     name: maksimkavalenka/resource-service
-    tag: 1.0.0
+    tag: 1.2.0
   deployment:
     replicas: 2

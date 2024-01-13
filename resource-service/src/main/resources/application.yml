@@ -3,6 +3,14 @@ application:
     deletion:
       limit: 200
 
+aws:
+  destination:
+    host: localhost
+    port: 4566
+    url: http://${aws.destination.host}:${aws.destination.port}
+  s3:
+    bucket-name: resources
+
 database:
   destination:
     host: localhost
@@ -103,6 +111,11 @@ spring:
 ---
 
 # development
+
+aws:
+  auth:
+    access-key-id: test
+    secret-access-key: test
 
 database:
   destination:

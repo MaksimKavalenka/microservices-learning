@@ -12,9 +12,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.apache.tika:tika-core")
-    implementation("org.apache.tika:tika-parsers-standard-package")
-
     implementation("org.flywaydb:flyway-core")
     implementation("org.postgresql:postgresql")
 
@@ -31,14 +28,19 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
+    implementation("software.amazon.awssdk:s3")
+
     implementation(files("libs/spring-microservices-starter-1.0.0.jar"))
     implementation(files("libs/song-service-api-1.1.0.jar"))
 }
 
 the<DependencyManagementExtension>().apply {
     imports {
-        mavenBom("org.apache.tika:tika-bom:2.9.0")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+    }
+
+    dependencies {
+        dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
 

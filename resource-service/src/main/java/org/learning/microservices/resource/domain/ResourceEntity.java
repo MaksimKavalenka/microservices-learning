@@ -1,14 +1,10 @@
 package org.learning.microservices.resource.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-
-import java.sql.Types;
 
 @Data
 @Builder
@@ -23,8 +19,7 @@ public class ResourceEntity {
     @SequenceGenerator(name = "resource_generator", sequenceName = "resource_seq", allocationSize = 1)
     private Integer id;
 
-    @JsonIgnore
-    @JdbcTypeCode(Types.BINARY)
-    private byte[] content;
+    @Column(name = "s3_key")
+    private String s3Key;
 
 }
