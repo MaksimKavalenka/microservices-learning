@@ -40,6 +40,8 @@ public class AwsProperties {
 
         private String bucketName;
 
+        private boolean createIfNotExist;
+
     }
 
 }
