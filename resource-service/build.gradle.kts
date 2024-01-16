@@ -27,6 +27,7 @@ dependencies {
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 
     implementation("software.amazon.awssdk:s3")
 

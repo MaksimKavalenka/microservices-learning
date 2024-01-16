@@ -9,7 +9,10 @@ import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.microservices.resource.domain.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.resource.service.AwsS3Service;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +35,8 @@ public class ResourceController {
 
     private final ResourceRepository repository;
 
+    private final RabbitTemplate rabbitTemplate;
+
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
 
@@ -49,6 +54,9 @@ public class ResourceController {
         ResourceEntity resource = ResourceEntity.builder().s3Key(s3Key).build();
         resource = repository.save(resource);
         log.info("Resource is saved: {}", resource.getId());
+
+        rabbitTemplate.convertAndSend("topic.resources", "DOMAIN.RESOURCE", resource.getId());
+        log.info("The message is sent: {}", resource.getId());
 
         return Map.of("id", resource.getId());
     }
