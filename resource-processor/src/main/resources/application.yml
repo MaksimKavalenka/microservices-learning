@@ -1,3 +1,11 @@
+aws:
+  destination:
+    host: localhost
+    port: 4566
+    url: http://${aws.destination.host}:${aws.destination.port}
+  s3:
+    bucket-name: resources
+
 infrastructure:
   song-service:
     alias: song-service
@@ -16,6 +24,12 @@ spring:
   config:
     discovery:
       enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    queues: stream.resources,stream.resources.dlq
   servlet:
     multipart:
       maxFileSize: -1
@@ -24,6 +38,11 @@ spring:
 ---
 
 # development
+
+aws:
+  auth:
+    access-key-id: test
+    secret-access-key: test
 
 infrastructure:
   song-service:
