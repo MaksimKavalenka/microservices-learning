@@ -6,14 +6,14 @@ entries:
     digest: c9f1a2bea6ae5e000a11b09035bb6a23b8c518f48b46d92642149f56e5460df5
     name: resource-service
     urls:
-    - repo/resource-service-1.1.0.tgz
+    - charts/resource-service-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
     created: "2024-01-13T23:01:35.7855962+03:00"
     digest: c38f4e738678eec66d953231526af287ef99f4179dec371fe9767e079285fee7
     name: resource-service
     urls:
-    - repo/resource-service-1.0.0.tgz
+    - charts/resource-service-1.0.0.tgz
     version: 1.0.0
   song-service:
   - apiVersion: v2
@@ -21,6 +21,6 @@ entries:
     digest: 5adf05dcf2f76fb255abd25f8d6e575d661aa39c32c7d260f6b647d205e534f8
     name: song-service
     urls:
-    - repo/song-service-1.0.0.tgz
+    - charts/song-service-1.0.0.tgz
     version: 1.0.0
 generated: "2024-01-13T23:01:35.7855962+03:00"
