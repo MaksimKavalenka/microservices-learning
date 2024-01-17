@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.chart.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ .Values.chart.name }}
+spec:
+  replicas: {{ .Values.service.deployment.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Values.chart.name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.chart.name }}
+    spec:
+      containers:
+      - name: {{ .Values.chart.name }}
+        image: {{ .Values.service.image.name }}:{{ .Values.service.image.tag }}
+        ports:
+        - name: service-port
+          containerPort: {{ .Values.service.expose.port }}
+        env:
+        - name: AWS_AUTH_ACCESSKEYID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chart.name }}-secret
+              key: AWS_AUTH_ACCESSKEYID
+        - name: AWS_AUTH_SECRETACCESSKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.chart.name }}-secret
+              key: AWS_AUTH_SECRETACCESSKEY
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.chart.name }}-configmap
+        startupProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
