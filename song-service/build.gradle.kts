@@ -7,6 +7,14 @@ plugins {
     id("org.springframework.boot") version "3.1.4"
 }
 
+configurations {
+    listOf(apiElements, runtimeElements).forEach {
+        val jar by tasks
+        it.get().outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+        it.get().outgoing.artifact(tasks.bootJar)
+    }
+}
+
 allprojects {
     apply {
         plugin("java")

@@ -9,6 +9,14 @@ plugins {
 apply(plugin = "io.spring.dependency-management")
 apply(plugin = "maven-publish")
 
+configurations {
+    listOf(apiElements, runtimeElements).forEach {
+        val jar by tasks
+        it.get().outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+        it.get().outgoing.artifact(tasks.bootJar)
+    }
+}
+
 repositories {
     mavenCentral()
 
