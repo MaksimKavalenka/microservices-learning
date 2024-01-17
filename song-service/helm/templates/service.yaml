@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: song-service-postgres
+  name: {{ .Release.Name }}-postgres
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    name: song-service-postgres
+    name: {{ .Release.Name }}-postgres
   ports:
     - protocol: TCP
       port: 5432
@@ -16,11 +16,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: song-service
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    name: song-service
+    name: {{ .Release.Name }}
   ports:
     - name: web-port
       protocol: TCP
