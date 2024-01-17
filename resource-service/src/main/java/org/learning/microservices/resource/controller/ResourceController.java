@@ -6,13 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.learning.microservices.exception.DataNotFoundException;
+import org.learning.microservices.resource.api.ResourceMessage;
+import org.learning.microservices.resource.configuration.properties.RabbitExchangeProperties;
 import org.learning.microservices.resource.domain.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.resource.service.AwsS3Service;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +33,11 @@ public class ResourceController {
 
     private final AwsS3Service awsS3Service;
 
-    private final ResourceRepository repository;
+    private final RabbitExchangeProperties rabbitExchangeProperties;
 
     private final RabbitTemplate rabbitTemplate;
+
+    private final ResourceRepository repository;
 
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
@@ -55,8 +57,14 @@ public class ResourceController {
         resource = repository.save(resource);
         log.info("Resource is saved: {}", resource.getId());
 
-        rabbitTemplate.convertAndSend("topic.resources", "DOMAIN.RESOURCE", resource.getId());
-        log.info("The message is sent: {}", resource.getId());
+        ResourceMessage message = ResourceMessage.builder()
+                .id(resource.getId())
+                .s3Key(resource.getS3Key())
+                .build();
+
+        rabbitTemplate.convertAndSend(
+                rabbitExchangeProperties.getName(), rabbitExchangeProperties.getRoutingKey(), message);
+        log.info("The message is sent: {}", message);
 
         return Map.of("id", resource.getId());
     }
@@ -83,7 +91,8 @@ public class ResourceController {
 
         if (ids.size() > deletionLimit) {
             throw new IllegalArgumentException(
-                    String.format("It is not allowed to delete more than %d resources in a single request", deletionLimit));
+                    String.format("It is not allowed to delete more than %d resources in a single request",
+                            deletionLimit));
         }
 
         // Delete resources from S3

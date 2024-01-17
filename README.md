@@ -3,9 +3,14 @@
 ## Helm Charts
 
 ### Prerequisites
+- [RabbitMQ](https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq)
 - [LocalStack](https://localstack.github.io/helm-charts)
 ```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add localstack https://localstack.github.io/helm-charts
+helm repo update
 helm install localstack localstack/localstack -f ./tools/localstack/values.yaml
+helm install rabbitmq bitnami/rabbitmq -f ./tools/rabbitmq/values.yaml
 ```
 
 ### Main Stack

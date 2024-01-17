@@ -36,13 +36,6 @@ flyway:
   database:
     create-if-not-exists: true
 
-infrastructure:
-  song-service:
-    alias: song-service
-    host: localhost
-    port: 8080
-    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
-
 server:
   port: 8080
   servlet:
@@ -71,6 +64,9 @@ spring:
     port: 5672
     username: admin
     password: admin
+    exchange:
+      name: topic.resources
+      routing-key: DOMAIN.RESOURCE
   servlet:
     multipart:
       maxFileSize: -1
@@ -105,10 +101,6 @@ eureka:
   client:
     enabled: true
 
-infrastructure:
-  song-service:
-    url: ""
-
 spring:
   config:
     activate:
@@ -126,10 +118,6 @@ aws:
 database:
   destination:
     port: 5401
-
-infrastructure:
-  song-service:
-    port: 8082
 
 logging:
   level:
