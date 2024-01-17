@@ -1,11 +1,11 @@
-chart:
-  name: resource-processor
-
 aws:
   destination:
     host: localstack
   s3:
     bucketName: resources
+
+chart:
+  name: resource-processor
 
 service:
   expose:

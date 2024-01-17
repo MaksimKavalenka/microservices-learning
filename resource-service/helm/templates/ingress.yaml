@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: resource-service-ingress
+  name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1/resources$2
@@ -15,6 +15,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: resource-service
+            name: {{ .Release.Name }}
             port:
               name: web-port
