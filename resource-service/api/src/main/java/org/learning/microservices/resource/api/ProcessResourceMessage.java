@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ResourceMessage implements Serializable {
+public class ProcessResourceMessage implements Serializable {
 
     private Integer id;
 

@@ -96,5 +96,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 
+    implementation("org.springframework.retry:spring-retry")
+
     implementation("software.amazon.awssdk:s3")
 }

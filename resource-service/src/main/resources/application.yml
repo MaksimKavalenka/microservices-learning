@@ -36,6 +36,9 @@ flyway:
   database:
     create-if-not-exists: true
 
+retry:
+  maxAttempts: 3
+
 server:
   port: 8080
   servlet:
@@ -64,9 +67,13 @@ spring:
     port: 5672
     username: admin
     password: admin
-    exchange:
-      name: topic.resources
-      routing-key: DOMAIN.RESOURCE
+    bindings:
+      process:
+        source: topic.resources
+        routing-key: DOMAIN.RESOURCE.PROCESS
+      delete:
+        source: topic.resources
+        routing-key: DOMAIN.RESOURCE.DELETE
   servlet:
     multipart:
       maxFileSize: -1

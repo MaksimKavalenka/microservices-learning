@@ -13,6 +13,9 @@ infrastructure:
     port: 8080
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
 
+retry:
+  maxAttempts: 3
+
 server:
   port: 8080
   servlet:
@@ -29,7 +32,9 @@ spring:
     port: 5672
     username: admin
     password: admin
-    queues: stream.resources,stream.resources.dlq
+    queues:
+      process: queue.resources.process,queue.resources.process.dlq
+      delete: queue.resources.delete,queue.resources.delete.dlq
   servlet:
     multipart:
       maxFileSize: -1

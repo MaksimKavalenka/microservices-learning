@@ -9,10 +9,12 @@ import org.learning.microservices.processor.mapper.SongMapper;
 import org.learning.microservices.processor.service.AwsS3Service;
 import org.learning.microservices.processor.service.SongService;
 import org.learning.microservices.processor.util.FileParser;
-import org.learning.microservices.resource.api.ResourceMessage;
+import org.learning.microservices.resource.api.DeleteResourcesMessage;
+import org.learning.microservices.resource.api.ProcessResourceMessage;
 import org.learning.microservices.song.api.domain.SongRequest;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.Message;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -27,8 +29,9 @@ public class ResourceMessageListener {
 
     private final SongService songService;
 
-    @RabbitListener(queues = "#{'${spring.rabbitmq.queues}'.split(',')}")
-    public void resourcesListener(Message<ResourceMessage> message) throws MessageProcessingException {
+    @Retryable
+    @RabbitListener(queues = "#{'${spring.rabbitmq.queues.process}'.split(',')}")
+    public void processResourceListener(Message<ProcessResourceMessage> message) throws MessageProcessingException {
         try {
             log.info("Message is received: {}", message.getPayload());
 
@@ -39,6 +42,13 @@ public class ResourceMessageListener {
         } catch (IOException | TikaException | SAXException e) {
             throw new MessageProcessingException();
         }
+    }
+
+    @Retryable
+    @RabbitListener(queues = "#{'${spring.rabbitmq.queues.delete}'.split(',')}")
+    public void deleteResourcesListener(Message<DeleteResourcesMessage> message) {
+        log.info("Message is received: {}", message.getPayload());
+        songService.deleteSongs(message.getPayload().getIds());
     }
 
 }

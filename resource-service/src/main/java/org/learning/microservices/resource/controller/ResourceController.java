@@ -6,13 +6,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.learning.microservices.exception.DataNotFoundException;
-import org.learning.microservices.resource.api.ResourceMessage;
-import org.learning.microservices.resource.configuration.properties.RabbitExchangeProperties;
+import org.learning.microservices.resource.api.DeleteResourcesMessage;
+import org.learning.microservices.resource.api.ProcessResourceMessage;
+import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties;
+import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.BindingProperties;
 import org.learning.microservices.resource.domain.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.resource.service.AwsS3Service;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.DELETE_BINDING_KEY;
+import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.PROCESS_BINDING_KEY;
+
 @RestController
 @RequestMapping("/v1/resources")
 @RequiredArgsConstructor
@@ -33,7 +39,7 @@ public class ResourceController {
 
     private final AwsS3Service awsS3Service;
 
-    private final RabbitExchangeProperties rabbitExchangeProperties;
+    private final RabbitBindingProperties rabbitBindingProperties;
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -42,6 +48,7 @@ public class ResourceController {
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
 
+    @Retryable
     @PostMapping(consumes = "audio/mpeg")
     public Map<String, Object> uploadResource(@RequestBody byte[] content) throws IOException {
         String s3Key = RandomStringUtils.randomAlphanumeric(16);
@@ -57,13 +64,13 @@ public class ResourceController {
         resource = repository.save(resource);
         log.info("Resource is saved: {}", resource.getId());
 
-        ResourceMessage message = ResourceMessage.builder()
+        ProcessResourceMessage message = ProcessResourceMessage.builder()
                 .id(resource.getId())
                 .s3Key(resource.getS3Key())
                 .build();
 
-        rabbitTemplate.convertAndSend(
-                rabbitExchangeProperties.getName(), rabbitExchangeProperties.getRoutingKey(), message);
+        BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(PROCESS_BINDING_KEY);
+        rabbitTemplate.convertAndSend(bindingProperties.getSource(), bindingProperties.getRoutingKey(), message);
         log.info("The message is sent: {}", message);
 
         return Map.of("id", resource.getId());
@@ -83,6 +90,7 @@ public class ResourceController {
                 .orElseThrow(() -> new DataNotFoundException(id));
     }
 
+    @Retryable
     @DeleteMapping
     public Map<String, Object> deleteResources(@RequestParam("id") @NotBlank String id) {
         List<Integer> ids = Arrays.stream(id.split(","))
@@ -102,6 +110,14 @@ public class ResourceController {
         // Delete resources from DB
         repository.deleteAllById(ids);
         log.info("Resources are deleted: {}", ids);
+
+        DeleteResourcesMessage message = DeleteResourcesMessage.builder()
+                .ids(id)
+                .build();
+
+        BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(DELETE_BINDING_KEY);
+        rabbitTemplate.convertAndSend(bindingProperties.getSource(), bindingProperties.getRoutingKey(), message);
+        log.info("The message is sent: {}", message);
 
         return Map.of("ids", ids);
     }
