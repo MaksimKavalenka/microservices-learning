@@ -1,0 +1,9 @@
+<metadata>
+    <groupId>org.learning.microservices</groupId>
+    <artifactId>spring-microservices-starter</artifactId>
+    <versioning>
+        <versions>
+            <version>1.0.0</version>
+        </versions>
+    </versioning>
+</metadata>
