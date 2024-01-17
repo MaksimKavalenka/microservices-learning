@@ -30,12 +30,12 @@ spec:
         - name: AWS_AUTH_ACCESSKEYID
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-aws-secret
               key: AWS_AUTH_ACCESSKEYID
         - name: AWS_AUTH_SECRETACCESSKEY
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-aws-secret
               key: AWS_AUTH_SECRETACCESSKEY
         envFrom:
         - configMapRef:

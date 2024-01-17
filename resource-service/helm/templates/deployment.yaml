@@ -30,22 +30,22 @@ spec:
         - name: AWS_AUTH_ACCESSKEYID
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-aws-secret
               key: AWS_AUTH_ACCESSKEYID
         - name: AWS_AUTH_SECRETACCESSKEY
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-aws-secret
               key: AWS_AUTH_SECRETACCESSKEY
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_USER
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Release.Name }}-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_PASSWORD
         envFrom:
         - configMapRef:
