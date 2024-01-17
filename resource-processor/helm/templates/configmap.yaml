@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.chart.name }}-configmap
+  name: {{ .Release.Name }}-configmap
   namespace: {{ .Release.Namespace }}
   {{- template "resource-processor.labels" . }}
 data:
   AWS_DESTINATION_HOST: {{ .Values.aws.destination.host }}
   AWS_S3_BUCKETNAME: {{ .Values.aws.s3.bucketName }}
   INFRASTRUCTURE_SONGSERVICE_HOST: song-service.{{ .Release.Namespace }}
-  SPRING_APPLICATION_NAME: {{ .Values.chart.name }}
+  SPRING_APPLICATION_NAME: {{ .Release.Name }}

@@ -4,9 +4,6 @@ aws:
   s3:
     bucketName: resources
 
-chart:
-  name: resource-processor
-
 service:
   expose:
     port: 8080

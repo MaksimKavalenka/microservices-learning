@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.chart.name }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    name: {{ .Values.chart.name }}
+    name: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.service.deployment.replicas }}
   selector:
     matchLabels:
-      name: {{ .Values.chart.name }}
+      name: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,10 +18,10 @@ spec:
   template:
     metadata:
       labels:
-        name: {{ .Values.chart.name }}
+        name: {{ .Release.Name }}
     spec:
       containers:
-      - name: {{ .Values.chart.name }}
+      - name: {{ .Release.Name }}
         image: {{ .Values.service.image.name }}:{{ .Values.service.image.tag }}
         ports:
         - name: service-port
@@ -30,16 +30,16 @@ spec:
         - name: AWS_AUTH_ACCESSKEYID
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.chart.name }}-secret
+              name: {{ .Release.Name }}-secret
               key: AWS_AUTH_ACCESSKEYID
         - name: AWS_AUTH_SECRETACCESSKEY
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.chart.name }}-secret
+              name: {{ .Release.Name }}-secret
               key: AWS_AUTH_SECRETACCESSKEY
         envFrom:
         - configMapRef:
-            name: {{ .Values.chart.name }}-configmap
+            name: {{ .Release.Name }}-configmap
         startupProbe:
           httpGet:
             path: {{ .Values.service.expose.api.health }}
