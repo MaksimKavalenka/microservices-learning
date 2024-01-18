@@ -108,3 +108,8 @@ dependencies {
 
     implementation("software.amazon.awssdk:s3")
 }
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
+    archiveClassifier.set("")
+}

@@ -4,6 +4,9 @@ aws:
   s3:
     bucketName: resources
 
+rabbitmq:
+  host: rabbitmq
+
 service:
   expose:
     port: 8080

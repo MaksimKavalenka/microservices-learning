@@ -9,3 +9,4 @@ data:
   AWS_S3_BUCKETNAME: {{ .Values.aws.s3.bucketName }}
   DATABASE_DESTINATION_HOST: {{ .Release.Name }}-postgres.{{ .Release.Namespace }}
   SPRING_APPLICATION_NAME: {{ .Release.Name }}
+  SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host }}

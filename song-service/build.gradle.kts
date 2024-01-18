@@ -110,3 +110,8 @@ dependencies {
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 }
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
+    archiveClassifier.set("")
+}

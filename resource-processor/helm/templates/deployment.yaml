@@ -37,6 +37,16 @@ spec:
             secretKeyRef:
               name: {{ .Release.Name }}-aws-secret
               key: AWS_AUTH_SECRETACCESSKEY
+        - name: SPRING_RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: USERNAME
+        - name: SPRING_RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: PASSWORD
         envFrom:
         - configMapRef:
             name: {{ .Release.Name }}-configmap

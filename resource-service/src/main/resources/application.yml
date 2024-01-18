@@ -65,8 +65,6 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: admin
-    password: admin
     bindings:
       process:
         source: topic.resources
@@ -149,3 +147,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  rabbitmq:
+    username: admin
+    password: admin

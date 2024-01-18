@@ -18,8 +18,6 @@ retry:
 
 server:
   port: 8080
-  servlet:
-    contextPath: /api
 
 spring:
   application:
