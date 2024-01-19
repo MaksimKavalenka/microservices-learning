@@ -86,7 +86,7 @@ the<DependencyManagementExtension>().apply {
 
     dependencies {
         dependency("org.learning.microservices:resource-service-api:1.0.0")
-        dependency("org.learning.microservices:song-service-api:1.1.0")
+        dependency("org.learning.microservices:song-service-api:1.2.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }

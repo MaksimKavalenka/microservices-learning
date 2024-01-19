@@ -23,6 +23,6 @@ service:
       health: /api/actuator/health
   image:
     name: maksimkavalenka/resource-service
-    tag: 1.3.0
+    tag: latest
   deployment:
     replicas: 2
