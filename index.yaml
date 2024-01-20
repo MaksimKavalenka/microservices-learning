@@ -1,26 +1,48 @@
 apiVersion: v1
 entries:
+  resource-processor:
+  - apiVersion: v2
+    created: "2024-01-20T11:22:50.3869229+03:00"
+    digest: 75cb6bdc8d587bb32276b1782566919ca985d55f748ac0d8018ef9f50c2139b7
+    name: resource-processor
+    urls:
+    - repo/resource-processor/resource-processor-1.0.0.tgz
+    version: 1.0.0
   resource-service:
   - apiVersion: v2
-    created: "2024-01-13T23:01:35.7855962+03:00"
+    created: "2024-01-20T11:22:50.3869229+03:00"
+    digest: 77b183bddb6d901094342e0ed8caab19f7a0cc05bcdcd2696c71381fc58c6de0
+    name: resource-service
+    urls:
+    - repo/resource-service/resource-service-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    created: "2024-01-20T11:22:50.3869229+03:00"
     digest: c9f1a2bea6ae5e000a11b09035bb6a23b8c518f48b46d92642149f56e5460df5
     name: resource-service
     urls:
-    - charts/resource-service-1.1.0.tgz
+    - repo/resource-service/resource-service-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
-    created: "2024-01-13T23:01:35.7855962+03:00"
+    created: "2024-01-20T11:22:50.3869229+03:00"
     digest: c38f4e738678eec66d953231526af287ef99f4179dec371fe9767e079285fee7
     name: resource-service
     urls:
-    - charts/resource-service-1.0.0.tgz
+    - repo/resource-service/resource-service-1.0.0.tgz
     version: 1.0.0
   song-service:
   - apiVersion: v2
-    created: "2024-01-13T23:01:35.7855962+03:00"
+    created: "2024-01-20T11:22:50.387923+03:00"
+    digest: c25a13ea291eb395c727f86975b5da5a44fb12aacb2b9fc75fe67b775a40d33c
+    name: song-service
+    urls:
+    - repo/song-service/song-service-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    created: "2024-01-20T11:22:50.387923+03:00"
     digest: 5adf05dcf2f76fb255abd25f8d6e575d661aa39c32c7d260f6b647d205e534f8
     name: song-service
     urls:
-    - charts/song-service-1.0.0.tgz
+    - repo/song-service/song-service-1.0.0.tgz
     version: 1.0.0
-generated: "2024-01-13T23:01:35.7855962+03:00"
+generated: "2024-01-20T11:22:50.3869229+03:00"
