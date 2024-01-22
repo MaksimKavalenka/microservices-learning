@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.service.deployment.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.service.image.name }}:{{ .Values.service.image.tag }}
+        ports:
+        - name: service-port
+          containerPort: {{ .Values.service.expose.port }}
+        env:
+        - name: AWS_AUTH_ACCESSKEYID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-aws-secret
+              key: AWS_AUTH_ACCESSKEYID
+        - name: AWS_AUTH_SECRETACCESSKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-aws-secret
+              key: AWS_AUTH_SECRETACCESSKEY
+        - name: SPRING_RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: USERNAME
+        - name: SPRING_RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: PASSWORD
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-configmap
+        startupProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10

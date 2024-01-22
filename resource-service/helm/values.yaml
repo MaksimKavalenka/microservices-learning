@@ -13,6 +13,9 @@ database:
     requests:
       storage: 1Gi
 
+rabbitmq:
+  host: rabbitmq
+
 service:
   expose:
     port: 8080
@@ -20,6 +23,6 @@ service:
       health: /api/actuator/health
   image:
     name: maksimkavalenka/resource-service
-    tag: 1.2.0
+    tag: latest
   deployment:
     replicas: 2

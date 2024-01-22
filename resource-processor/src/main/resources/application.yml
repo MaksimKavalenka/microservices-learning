@@ -1,9 +1,20 @@
+aws:
+  destination:
+    host: localhost
+    port: 4566
+    url: http://${aws.destination.host}:${aws.destination.port}
+  s3:
+    bucket-name: resources
+
 infrastructure:
   song-service:
     alias: song-service
     host: localhost
     port: 8080
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+
+retry:
+  maxAttempts: 3
 
 server:
   port: 8080
@@ -16,6 +27,14 @@ spring:
   config:
     discovery:
       enabled: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    queues:
+      process: queue.resources.process,queue.resources.process.dlq
+      delete: queue.resources.delete,queue.resources.delete.dlq
   servlet:
     multipart:
       maxFileSize: -1
@@ -24,6 +43,11 @@ spring:
 ---
 
 # development
+
+aws:
+  auth:
+    access-key-id: test
+    secret-access-key: test
 
 infrastructure:
   song-service:

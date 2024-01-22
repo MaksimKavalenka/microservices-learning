@@ -1,0 +1,19 @@
+aws:
+  destination:
+    host: localstack
+  s3:
+    bucketName: resources
+
+rabbitmq:
+  host: rabbitmq
+
+service:
+  expose:
+    port: 8080
+    api:
+      health: /api/actuator/health
+  image:
+    name: maksimkavalenka/resource-processor
+    tag: latest
+  deployment:
+    replicas: 2

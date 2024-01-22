@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: song-service-postgres
+  name: {{ .Release.Name }}-postgres
   namespace: {{ .Release.Namespace }}
   labels:
-    name: song-service-postgres
+    name: {{ .Release.Name }}-postgres
 spec:
   selector:
     matchLabels:
-      name: song-service-postgres
+      name: {{ .Release.Name }}-postgres
   template:
     metadata:
       labels:
-        name: song-service-postgres
+        name: {{ .Release.Name }}-postgres
     spec:
       containers:
       - name: postgres
@@ -22,7 +22,7 @@ spec:
           containerPort: {{ .Values.database.expose.port }}
         envFrom:
         - secretRef:
-            name: song-service-postgres-secret
+            name: {{ .Release.Name }}-postgres-secret
         startupProbe:
           exec:
             command: ["psql", "-c", "SELECT 1"]
@@ -45,4 +45,4 @@ spec:
       volumes:
         - name: postgres-volume-mount
           persistentVolumeClaim:
-            claimName: song-service-postgres-pvc
+            claimName: {{ .Release.Name }}-postgres-pvc

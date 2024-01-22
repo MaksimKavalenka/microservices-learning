@@ -1,4 +1,4 @@
-package org.learning.microservices.resource.client;
+package org.learning.microservices.processor.client;
 
 import org.learning.microservices.song.api.service.SongService;
 import org.springframework.cloud.openfeign.FeignClient;

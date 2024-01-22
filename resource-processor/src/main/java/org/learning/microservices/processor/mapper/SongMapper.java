@@ -15,8 +15,16 @@ public class SongMapper {
                 .genre(metadata.get("xmpDM:genre"))
                 .album(metadata.get("xmpDM:album"))
                 .length((int) Math.ceil(Double.parseDouble(metadata.get("xmpDM:duration"))))
-                .year(Integer.valueOf(metadata.get("xmpDM:releaseDate")))
+                .year(getYear(metadata))
                 .build();
+    }
+
+    private Integer getYear(Metadata metadata) {
+        try {
+            return Integer.valueOf(metadata.get("xmpDM:releaseDate"));
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
 }

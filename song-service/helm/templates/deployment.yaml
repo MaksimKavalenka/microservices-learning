@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: song-service
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    name: song-service
+    name: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.service.deployment.replicas }}
   selector:
     matchLabels:
-      name: song-service
+      name: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        name: song-service
+        name: {{ .Release.Name }}
     spec:
       containers:
       - name: service
@@ -30,16 +30,16 @@ spec:
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: song-service-postgres-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_USER
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: song-service-postgres-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_PASSWORD
         envFrom:
         - configMapRef:
-            name: song-service-configmap
+            name: {{ .Release.Name }}-configmap
         startupProbe:
           httpGet:
             path: {{ .Values.service.expose.api.health }}

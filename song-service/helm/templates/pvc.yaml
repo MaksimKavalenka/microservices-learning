@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: song-service-postgres-pvc
+  name: {{ .Release.Name }}-postgres-pvc
   namespace: {{ .Release.Namespace }}
 spec:
   storageClassName: manual
@@ -10,4 +10,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.database.resources.requests.storage }}
-  volumeName: song-service-postgres-pv
+  volumeName: {{ .Release.Name }}-postgres-pv

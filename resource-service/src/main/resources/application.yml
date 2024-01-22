@@ -36,12 +36,8 @@ flyway:
   database:
     create-if-not-exists: true
 
-infrastructure:
-  song-service:
-    alias: song-service
-    host: localhost
-    port: 8080
-    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+retry:
+  maxAttempts: 3
 
 server:
   port: 8080
@@ -66,6 +62,16 @@ spring:
     hibernate:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+  rabbitmq:
+    host: localhost
+    port: 5672
+    bindings:
+      process:
+        source: topic.resources
+        routing-key: DOMAIN.RESOURCE.PROCESS
+      delete:
+        source: topic.resources
+        routing-key: DOMAIN.RESOURCE.DELETE
   servlet:
     multipart:
       maxFileSize: -1
@@ -100,10 +106,6 @@ eureka:
   client:
     enabled: true
 
-infrastructure:
-  song-service:
-    url: ""
-
 spring:
   config:
     activate:
@@ -121,10 +123,6 @@ aws:
 database:
   destination:
     port: 5401
-
-infrastructure:
-  song-service:
-    port: 8082
 
 logging:
   level:
@@ -149,3 +147,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  rabbitmq:
+    username: admin
+    password: admin

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: resource-service
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    name: resource-service
+    name: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.service.deployment.replicas }}
   selector:
     matchLabels:
-      name: resource-service
+      name: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,10 +18,10 @@ spec:
   template:
     metadata:
       labels:
-        name: resource-service
+        name: {{ .Release.Name }}
     spec:
       containers:
-      - name: resource-service
+      - name: {{ .Release.Name }}
         image: {{ .Values.service.image.name }}:{{ .Values.service.image.tag }}
         ports:
         - name: service-port
@@ -30,26 +30,36 @@ spec:
         - name: AWS_AUTH_ACCESSKEYID
           valueFrom:
             secretKeyRef:
-              name: resource-service-postgres-secret
-              key: AWS_AUTH_ACCESSKEYID
+              name: {{ .Release.Name }}-aws-secret
+              key: ACCESSKEYID
         - name: AWS_AUTH_SECRETACCESSKEY
           valueFrom:
             secretKeyRef:
-              name: resource-service-postgres-secret
-              key: AWS_AUTH_SECRETACCESSKEY
+              name: {{ .Release.Name }}-aws-secret
+              key: SECRETACCESSKEY
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:
-              name: resource-service-postgres-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_USER
         - name: SPRING_DATASOURCE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: resource-service-postgres-secret
+              name: {{ .Release.Name }}-postgres-secret
               key: POSTGRES_PASSWORD
+        - name: SPRING_RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: USERNAME
+        - name: SPRING_RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-rabbitmq-secret
+              key: PASSWORD
         envFrom:
         - configMapRef:
-            name: resource-service-configmap
+            name: {{ .Release.Name }}-configmap
         startupProbe:
           httpGet:
             path: {{ .Values.service.expose.api.health }}

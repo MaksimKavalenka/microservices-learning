@@ -24,18 +24,14 @@ public class SongRequest {
     @NotBlank
     private String artist;
 
-    @NotBlank
     private String genre;
 
-    @NotBlank
     private String album;
 
     @NotNull
     @Positive
     private Integer length;
 
-    @NotNull
-    @Positive
     private Integer year;
 
 }

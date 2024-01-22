@@ -3,7 +3,16 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 plugins {
     id("java")
     id("java-library")
+    id("maven-publish")
     id("org.springframework.boot") version "3.1.4"
+}
+
+configurations {
+    listOf(apiElements, runtimeElements).forEach {
+        val jar by tasks
+        it.get().outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+        it.get().outgoing.artifact(tasks.bootJar)
+    }
 }
 
 allprojects {
@@ -11,10 +20,47 @@ allprojects {
         plugin("java")
         plugin("java-library")
         plugin("io.spring.dependency-management")
+        plugin("maven-publish")
     }
 
     repositories {
         mavenCentral()
+
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
+            credentials {
+                username = project.findProperty("gpr.user") as String
+                password = project.findProperty("gpr.key") as String
+            }
+        }
+    }
+
+    configure<PublishingExtension> {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
+                credentials {
+                    username = project.findProperty("gpr.user") as String
+                    password = project.findProperty("gpr.key") as String
+                }
+            }
+        }
+
+        publications {
+            register<MavenPublication>("gpr") {
+                from(components["java"])
+                versionMapping {
+                    usage("java-api") {
+                        fromResolutionOf("runtimeClasspath")
+                    }
+                    usage("java-runtime") {
+                        fromResolutionResult()
+                    }
+                }
+            }
+        }
     }
 
     dependencies {
@@ -33,6 +79,8 @@ allprojects {
                 entry("mapstruct")
                 entry("mapstruct-processor")
             }
+
+            dependency("org.learning.microservices:spring-microservices-starter:1.0.0")
         }
     }
 
@@ -42,10 +90,14 @@ allprojects {
 }
 
 dependencies {
+    implementation(project(":song-service-api"))
+
     implementation("org.flywaydb:flyway-core")
 
-    implementation("org.mapstruct:mapstruct:1.5.5.Final")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+    implementation("org.learning.microservices:spring-microservices-starter")
+
+    implementation("org.mapstruct:mapstruct")
+    annotationProcessor("org.mapstruct:mapstruct-processor")
 
     implementation("org.postgresql:postgresql")
 
@@ -57,9 +109,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-
-    implementation(project(":song-service-api"))
-    implementation(files("libs/spring-microservices-starter-1.0.0.jar"))
 }
 
 tasks.getByName<Jar>("jar") {

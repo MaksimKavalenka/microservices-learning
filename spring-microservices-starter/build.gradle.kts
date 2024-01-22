@@ -2,10 +2,38 @@ plugins {
     id("java")
     id("java-library")
     id("io.spring.dependency-management") version "1.1.3"
+    id("maven-publish")
 }
 
 repositories {
     mavenCentral()
+}
+
+configure<PublishingExtension> {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
+            credentials {
+                username = project.findProperty("gpr.user") as String
+                password = project.findProperty("gpr.key") as String
+            }
+        }
+    }
+
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
 }
 
 dependencies {
