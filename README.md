@@ -18,7 +18,13 @@
 - Application (http://localhost:8082)
 - PostgreSQL (http://localhost:5402)
 
-### Libraries
+### Dependencies
+
+#### Resource Service API
+- Resource Service inbound adapter.
+
+#### Song Service API
+- Song Service inbound adapter.
 
 #### Spring Microservices Starter
 - REST exception handler.
@@ -37,7 +43,10 @@
 ### Artifacts
 - [Resource Processor](https://github.com/MaksimKavalenka/microservices-learning/packages/2046204)
 - [Resource Service](https://github.com/MaksimKavalenka/microservices-learning/packages/2043819)
+- [Resource Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2046203)
 - [Song Service](https://github.com/MaksimKavalenka/microservices-learning/packages/2043571)
+- [Song Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2043572)
+- [Spring Microservices Starter](https://github.com/MaksimKavalenka/microservices-learning/packages/2043488)
 
 ### Docker Images
 - [Resource Processor](https://hub.docker.com/r/maksimkavalenka/resource-processor)
