@@ -7,8 +7,10 @@ This repository contains packaged Helm charts provided by Maksim Kavalenka.
 
 ## Install Packages
 `$ helm install song-service microservices-learning/song-service`  
-`$ helm install resource-service microservices-learning/resource-service`
+`$ helm install resource-service microservices-learning/resource-service`  
+`$ helm install resource-service microservices-learning/resource-processor`
 
 ## Uninstall Packages
+`$ helm uninstall resource-processor`  
 `$ helm uninstall resource-service`  
 `$ helm uninstall song-service`
