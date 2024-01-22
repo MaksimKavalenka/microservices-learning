@@ -3,6 +3,6 @@ CREATE SEQUENCE resource_seq
 
 CREATE TABLE resources (
     id INT4 NOT NULL DEFAULT nextval('resource_seq'),
-    content BYTEA NOT NULL,
+    s3_key TEXT NOT NULL,
     PRIMARY KEY (id)
 );

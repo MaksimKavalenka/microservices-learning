@@ -1,8 +1,15 @@
 # Microservices Learning
 
 ## Helm Charts
-- [Microservices Learning](https://maksimkavalenka.github.io/microservices-learning)
+
+### Prerequisites
 - [LocalStack](https://localstack.github.io/helm-charts)
+```
+helm install localstack localstack/localstack -f ./tools/localstack/values.yaml
+```
+
+### Main Stack
+- [Microservices Learning](https://maksimkavalenka.github.io/microservices-learning)
 
 ## Docker Startup
 ```

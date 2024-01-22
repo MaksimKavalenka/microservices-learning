@@ -1,4 +1,4 @@
-package org.learning.microservices.resource.util;
+package org.learning.microservices.processor.util;
 
 import lombok.experimental.UtilityClass;
 import org.apache.tika.exception.TikaException;

@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface ResourceRepository extends CrudRepository<ResourceEntity, Integer> {
 
-    @Query("SELECT resource.id FROM ResourceEntity resource WHERE resource.id IN (:ids)")
-    List<Integer> getExistingIds(List<Integer> ids);
+    @Query("SELECT resource.s3Key FROM ResourceEntity resource WHERE resource.id IN (:ids)")
+    List<String> getS3Keys(List<Integer> ids);
 
     @Modifying
     @Transactional

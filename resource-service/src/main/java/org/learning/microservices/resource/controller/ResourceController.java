@@ -4,21 +4,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.learning.microservices.exception.DataNotFoundException;
-import org.learning.microservices.resource.client.SongServiceFeignClient;
 import org.learning.microservices.resource.domain.ResourceEntity;
-import org.learning.microservices.resource.mapper.SongMapper;
 import org.learning.microservices.resource.repository.ResourceRepository;
-import org.learning.microservices.resource.util.FileParser;
-import org.learning.microservices.song.api.domain.SongRequest;
+import org.learning.microservices.resource.service.AwsS3Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,24 +28,27 @@ import java.util.Map;
 @Validated
 public class ResourceController {
 
-    private final ResourceRepository repository;
+    private final AwsS3Service awsS3Service;
 
-    private final SongServiceFeignClient songService;
+    private final ResourceRepository repository;
 
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
 
     @PostMapping(consumes = "audio/mpeg")
-    public Map<String, Object> uploadResource(@RequestBody byte[] content) throws TikaException, IOException, SAXException {
-        ResourceEntity resource = ResourceEntity.builder().content(content).build();
+    public Map<String, Object> uploadResource(@RequestBody byte[] content) throws IOException {
+        String s3Key = RandomStringUtils.randomAlphanumeric(16);
+
+        // Write a resource to S3
+        Path path = Paths.get(s3Key);
+        Files.write(path, content);
+        awsS3Service.putObject(s3Key, path);
+        Files.delete(path);
+
+        // Save a resource in DB
+        ResourceEntity resource = ResourceEntity.builder().s3Key(s3Key).build();
         resource = repository.save(resource);
         log.info("Resource is saved: {}", resource.getId());
-
-        Metadata metadata = FileParser.getMp3Metadata(content);
-        SongRequest songRequest = SongMapper.toSongRequest(resource.getId(), metadata);
-
-        songService.saveSong(songRequest);
-        log.info("Song is saved: {}", songRequest.getResourceId());
 
         return Map.of("id", resource.getId());
     }
@@ -55,7 +56,14 @@ public class ResourceController {
     @GetMapping("/{id}")
     public byte[] getResource(@PathVariable("id") @Positive Integer id) {
         return repository.findById(id)
-                .map(ResourceEntity::getContent)
+                .map(ResourceEntity::getS3Key)
+                .map(s3Key -> {
+                    try {
+                        return awsS3Service.getObjectBytes(s3Key);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .orElseThrow(() -> new DataNotFoundException(id));
     }
 
@@ -70,12 +78,13 @@ public class ResourceController {
                     String.format("It is not allowed to delete more than %d resources in a single request", deletionLimit));
         }
 
-        ids = repository.getExistingIds(ids);
+        // Delete resources from S3
+        List<String> s3Keys = repository.getS3Keys(ids);
+        awsS3Service.deleteObjects(s3Keys);
+
+        // Delete resources from DB
         repository.deleteAllById(ids);
         log.info("Resources are deleted: {}", ids);
-
-        songService.deleteSongs(id);
-        log.info("Songs are deleted: {}", ids);
 
         return Map.of("ids", ids);
     }

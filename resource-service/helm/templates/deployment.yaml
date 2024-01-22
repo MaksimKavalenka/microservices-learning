@@ -27,6 +27,16 @@ spec:
         - name: service-port
           containerPort: {{ .Values.service.expose.port }}
         env:
+        - name: AWS_AUTH_ACCESSKEYID
+          valueFrom:
+            secretKeyRef:
+              name: resource-service-postgres-secret
+              key: AWS_AUTH_ACCESSKEYID
+        - name: AWS_AUTH_SECRETACCESSKEY
+          valueFrom:
+            secretKeyRef:
+              name: resource-service-postgres-secret
+              key: AWS_AUTH_SECRETACCESSKEY
         - name: SPRING_DATASOURCE_USERNAME
           valueFrom:
             secretKeyRef:

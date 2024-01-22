@@ -1,4 +1,4 @@
-package org.learning.microservices.resource.mapper;
+package org.learning.microservices.processor.mapper;
 
 import lombok.experimental.UtilityClass;
 import org.apache.tika.metadata.Metadata;
