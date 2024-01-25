@@ -16,6 +16,7 @@ import org.learning.microservices.resource.service.AwsS3Service;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ import static org.learning.microservices.resource.configuration.properties.Rabbi
 @RequestMapping("/v1/resources")
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 @Validated
 public class ResourceController {
 

@@ -10,7 +10,6 @@ aws:
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
     bucket-name: resources
-    create-if-not-exist: false
 
 database:
   destination:

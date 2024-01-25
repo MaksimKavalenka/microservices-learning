@@ -1,7 +1,7 @@
 package org.learning.microservices.processor.service;
 
 import lombok.RequiredArgsConstructor;
-import org.learning.microservices.processor.configuration.properties.AwsProperties;
+import org.learning.microservices.configuration.properties.AwsProperties;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;

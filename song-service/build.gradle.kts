@@ -80,7 +80,7 @@ allprojects {
                 entry("mapstruct-processor")
             }
 
-            dependency("org.learning.microservices:spring-microservices-starter:1.0.0")
+            dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
         }
     }
 

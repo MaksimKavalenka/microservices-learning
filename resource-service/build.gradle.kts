@@ -75,7 +75,7 @@ allprojects {
         }
 
         dependencies {
-            dependency("org.learning.microservices:spring-microservices-starter:1.0.0")
+            dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
             dependency("software.amazon.awssdk:s3:2.22.13")
         }
     }

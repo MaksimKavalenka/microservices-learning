@@ -63,6 +63,7 @@ dependencies {
 
     implementation("org.learning.microservices:resource-service-api")
     implementation("org.learning.microservices:song-service-api")
+    implementation("org.learning.microservices:spring-microservices-starter")
 
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
@@ -87,6 +88,7 @@ the<DependencyManagementExtension>().apply {
     dependencies {
         dependency("org.learning.microservices:resource-service-api:1.0.0")
         dependency("org.learning.microservices:song-service-api:1.2.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
