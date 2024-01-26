@@ -1,55 +1,129 @@
 package com.learning.microservices.resource
 
-import jakarta.ws.rs.core.MediaType
-import org.hamcrest.Matchers
-import org.learning.microservices.resource.ResourceServiceApplication
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Import
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.S3ClientBuilder
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest
+import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties
+import org.learning.microservices.resource.controller.ResourceController
+import org.learning.microservices.resource.domain.ResourceEntity
+import org.learning.microservices.resource.repository.ResourceRepository
+import org.learning.microservices.resource.service.AwsS3Service
+import org.springframework.amqp.rabbit.core.RabbitTemplate
+import spock.lang.Shared
 import spock.lang.Specification
 
-import java.util.function.Consumer
+import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.*
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.Mockito.*
 
-@SpringBootTest(classes = ResourceServiceApplication.class)
-@ActiveProfiles('test')
-@AutoConfigureMockMvc
-@Import(TestContainerConfiguration.class)
 class ResourceControllerTests extends Specification {
 
-    @Autowired
-    MockMvc mockMvc
+    @Shared
+    AwsS3Service awsS3Service
 
-    @Autowired
-    S3ClientBuilder s3ClientBuilder
+    @Shared
+    RabbitBindingProperties rabbitBindingProperties
+
+    @Shared
+    RabbitTemplate rabbitTemplate
+
+    @Shared
+    ResourceRepository resourceRepository
+
+    @Shared
+    ResourceController resourceController
 
     def 'setup'() {
-        S3Client s3 = s3ClientBuilder.build()
-        s3.createBucket(
-                CreateBucketRequest.builder()
-                        .bucket('resources')
-                        .build() as Consumer<CreateBucketRequest.Builder>)
+        awsS3Service = mock(AwsS3Service.class)
+        rabbitBindingProperties = mock(RabbitBindingProperties.class)
+        rabbitTemplate = mock(RabbitTemplate.class)
+        resourceRepository = mock(ResourceRepository.class)
+        resourceController = new ResourceController(awsS3Service, rabbitBindingProperties, rabbitTemplate, resourceRepository)
+        resourceController.deletionLimit = 200
     }
 
-    def 'Resource upload'() {
+    def 'Resource controller uploads a content'() {
         given:
+        ResourceEntity entity = ResourceEntity.builder()
+                .id(1)
+                .s3Key('s3TestKey')
+                .build()
+
+        and:
         ClassLoader classLoader = getClass().getClassLoader()
         File file = new File(classLoader.getResource("files/test_file.txt").getFile())
 
-        expect:
-        mockMvc.perform(MockMvcRequestBuilders.post('/v1/resources')
-                .contentType('audio/mpeg')
-                .content(file.getBytes())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath('$.id', Matchers.is(1)))
+        and:
+        BindingProperties bindingProperties = new BindingProperties()
+        bindingProperties.setSource('test')
+        bindingProperties.setRoutingKey('test')
+
+        when:
+        doNothing().when(awsS3Service).putObject(anyString(), any())
+        when(resourceRepository.save(any())).thenReturn(entity)
+        when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(PROCESS_BINDING_KEY, bindingProperties))
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
+        Map<String, Object> response = resourceController.uploadResource(file.getBytes())
+
+        then:
+        response.get('id') == 1
+        verify(awsS3Service, times(1)).putObject(anyString(), any()) || true
+        verify(resourceRepository, times(1)).save(any()) || true
+        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
+    }
+
+    def 'Resource controller returns a content'() {
+        given:
+        ResourceEntity entity = ResourceEntity.builder()
+                .id(1)
+                .s3Key('s3TestKey')
+                .build()
+
+        and:
+        ClassLoader classLoader = getClass().getClassLoader()
+        File file = new File(classLoader.getResource("files/test_file.txt").getFile())
+
+        when:
+        when(resourceRepository.findById(1)).thenReturn(Optional.of(entity))
+        when(awsS3Service.getObjectBytes(entity.getS3Key())).thenReturn(file.getBytes())
+        byte[] content = resourceController.getResource(1)
+
+        then:
+        file.getText() == new String(content)
+        verify(resourceRepository, times(1)).findById(entity.getId()) || true
+        verify(awsS3Service, times(1)).getObjectBytes(entity.getS3Key()) || true
+    }
+
+    def 'Resource controller deletes a content'() {
+        given:
+        ResourceEntity entity = ResourceEntity.builder()
+                .id(1)
+                .s3Key('s3TestKey')
+                .build()
+
+        and:
+        List<Integer> ids = [1, 2, 3]
+        List<String> s3Keys = ['key1', 'key2', 'key3']
+
+        and:
+        BindingProperties bindingProperties = new BindingProperties()
+        bindingProperties.setSource('test')
+        bindingProperties.setRoutingKey('test')
+
+        when:
+        when(resourceRepository.getS3Keys(ids)).thenReturn(s3Keys)
+        doNothing().when(awsS3Service).deleteObjects(s3Keys)
+        doNothing().when(resourceRepository).deleteAllById(ids)
+        when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(DELETE_BINDING_KEY, bindingProperties))
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
+
+        and:
+        Map<String, Object> response = resourceController.deleteResources('1,2,3')
+
+        then:
+        response.get('ids') == ids
+        verify(resourceRepository, times(1)).getS3Keys(ids) || true
+        verify(awsS3Service, times(1)).deleteObjects(s3Keys) || true
+        verify(resourceRepository, times(1)).deleteAllById(ids) || true
+        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
     }
 
 }

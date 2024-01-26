@@ -17,7 +17,7 @@ import spock.lang.Specification
 @ActiveProfiles('test')
 @AutoConfigureMockMvc
 @Import(TestContainerConfiguration.class)
-class ResourceServiceApplicationTests extends Specification {
+class ResourceServiceApplicationSpec extends Specification {
 
     @Autowired
     MockMvc mockMvc
