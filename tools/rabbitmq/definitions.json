@@ -1,0 +1,107 @@
+{
+    "users": [
+        {
+            "name": "admin",
+            "password_hash": "JgVoarXe+7McixkevovoCHqczEye8DDYMFcYrsSn8TFwZmSi",
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "tags": "administrator"
+        }
+    ],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "admin",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ],
+    "queues": [
+        {
+            "name": "queue.resources.process",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-dead-letter-exchange": "queue.resources.process.dlq"
+            }
+        },
+        {
+            "name": "queue.resources.process.dlq",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-dead-letter-exchange": "queue.resources.process.dlq"
+            }
+        },
+        {
+            "name": "queue.resources.delete",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-dead-letter-exchange": "queue.resources.delete.dlq"
+            }
+        },
+        {
+            "name": "queue.resources.delete.dlq",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+                "x-dead-letter-exchange": "queue.resources.delete.dlq"
+            }
+        }
+    ],
+    "exchanges": [
+        {
+            "name": "topic.resources",
+            "vhost": "/",
+            "type": "topic",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        }
+    ],
+    "bindings": [
+        {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.process",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.PROCESS",
+            "arguments": {}
+        },
+        {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.process.dlq",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.PROCESS.DLQ",
+            "arguments": {}
+        },
+        {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.delete",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.DELETE",
+            "arguments": {}
+        },
+        {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.delete.dlq",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.DELETE.DLQ",
+            "arguments": {}
+        }
+    ]
+}
