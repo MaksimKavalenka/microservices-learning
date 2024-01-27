@@ -14,7 +14,7 @@ import java.util.List;
 public class FlywayConfiguration {
 
     @Bean
-    @ConditionalOnProperty(value = "spring.flyway.enabled", matchIfMissing = true)
+    @ConditionalOnProperty("spring.flyway.schemas")
     public FlywayMigrationInitializer flywayMigrationInitializer(Flyway flyway, FlywayProperties flywayProperties,
                                                                  List<FlywayMigrationListener> flywayMigrationListeners) {
         return new FlywayMigrationInitializer(flyway, (f) -> {

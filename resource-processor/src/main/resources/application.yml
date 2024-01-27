@@ -60,3 +60,6 @@ spring:
   config:
     activate:
       on-profile: "development"
+  rabbitmq:
+    username: admin
+    password: admin
