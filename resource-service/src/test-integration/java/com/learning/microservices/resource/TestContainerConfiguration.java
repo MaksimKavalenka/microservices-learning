@@ -19,7 +19,10 @@ public class TestContainerConfiguration {
     @ServiceConnection
     public PostgreSQLContainer<?> postgreSqlContainer(DatabaseProperties databaseProperties) {
         return new PostgreSQLContainer<>("postgres:15")
-                .withDatabaseName(databaseProperties.getName());
+                .withDatabaseName(databaseProperties.getName())
+                .withCreateContainerCmdModifier(
+                        cmd -> cmd.getHostConfig().withPortBindings(
+                                new PortBinding(Ports.Binding.bindPort(5432), new ExposedPort(5432))));
     }
 
     @Bean

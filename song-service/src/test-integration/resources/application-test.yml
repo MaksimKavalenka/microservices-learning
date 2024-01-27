@@ -1,3 +1,7 @@
+database:
+  destination:
+    name: test
+
 logging:
   level:
     org:

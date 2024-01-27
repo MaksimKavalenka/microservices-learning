@@ -3,6 +3,10 @@ aws:
     access-key-id: test
     secret-access-key: test
 
+database:
+  destination:
+    name: test
+
 logging:
   level:
     org:
