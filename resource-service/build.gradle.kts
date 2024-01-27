@@ -130,3 +130,17 @@ tasks.getByName<Jar>("jar") {
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
+
+sourceSets {
+    test {
+        groovy {
+            setSrcDirs(listOf("src/test/groovy", "src/test-integration/groovy"))
+        }
+        java {
+            setSrcDirs(listOf("src/test/java", "src/test-integration/java"))
+        }
+        resources {
+            setSrcDirs(listOf("src/test/resources", "src/test-integration/resources"))
+        }
+    }
+}

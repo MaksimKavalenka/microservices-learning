@@ -3,6 +3,7 @@ package com.learning.microservices.resource
 import jakarta.ws.rs.core.MediaType
 import org.hamcrest.Matchers
 import org.learning.microservices.resource.ResourceServiceApplication
+import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -14,11 +15,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.S3ClientBuilder
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest
+import spock.lang.Shared
 import spock.lang.Specification
 
 @SpringBootTest(classes = ResourceServiceApplication.class)
 @ActiveProfiles('test')
 @AutoConfigureMockMvc
+@EnableSharedInjection
 @Import(TestContainerConfiguration.class)
 class ResourceControllerSpec extends Specification {
 
@@ -26,9 +29,10 @@ class ResourceControllerSpec extends Specification {
     MockMvc mockMvc
 
     @Autowired
+    @Shared
     S3ClientBuilder s3ClientBuilder
 
-    def 'setup'() {
+    def setupSpec() {
         S3Client s3 = s3ClientBuilder.build()
         s3.createBucket(
                 CreateBucketRequest.builder()
@@ -39,7 +43,7 @@ class ResourceControllerSpec extends Specification {
     def 'Resource upload workflow can manage files'() {
         given:
         ClassLoader classLoader = getClass().getClassLoader()
-        File file = new File(classLoader.getResource("files/test_file.txt").getFile())
+        File file = new File(classLoader.getResource("files/test_integration_file.txt").getFile())
 
         expect:
         mockMvc.perform(MockMvcRequestBuilders.post('/v1/resources')
