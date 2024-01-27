@@ -10,15 +10,16 @@ services:
     ports:
       - "${LOCALSTACK_PORT}:4566"
     volumes:
-      - ./tools/localstack/init-script.sh:/etc/localstack/init/ready.d/init-aws.sh
+      - ./tools/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management-alpine
     restart: on-failure
     ports:
       - "${RABBITMQ_PORT}:5672"
       - "${RABBITMQ_PORT_UI}:15672"
     volumes:
-      - ./tools/rabbitmq/definitions.json:/opt/definitions.json:ro
+      - ./tools/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./tools/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
   eureka-server:
     build: eureka-server
     image: maksimkavalenka/eureka-server:local

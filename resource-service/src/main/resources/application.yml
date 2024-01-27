@@ -96,6 +96,8 @@ spring:
   config:
     activate:
       on-profile: "docker"
+  rabbitmq:
+    host: ${docker.destination.host}
 
 ---
 
