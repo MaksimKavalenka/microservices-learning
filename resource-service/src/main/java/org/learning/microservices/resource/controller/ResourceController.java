@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.learning.microservices.exception.DataNotFoundException;
-import org.learning.microservices.resource.api.DeleteResourcesMessage;
-import org.learning.microservices.resource.api.ProcessResourceMessage;
+import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
+import org.learning.microservices.resource.api.message.ProcessResourceMessage;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.BindingProperties;
 import org.learning.microservices.resource.domain.ResourceEntity;
@@ -68,7 +68,6 @@ public class ResourceController {
 
         ProcessResourceMessage message = ProcessResourceMessage.builder()
                 .id(resource.getId())
-                .s3Key(resource.getS3Key())
                 .build();
 
         BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(PROCESS_BINDING_KEY);

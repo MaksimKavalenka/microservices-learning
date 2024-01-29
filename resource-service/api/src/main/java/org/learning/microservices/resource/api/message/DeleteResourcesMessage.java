@@ -1,4 +1,4 @@
-package org.learning.microservices.resource.api;
+package org.learning.microservices.resource.api.message;
 
 import lombok.*;
 

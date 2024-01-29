@@ -75,8 +75,6 @@ dependencies {
 
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
-
-    implementation("software.amazon.awssdk:s3")
 }
 
 the<DependencyManagementExtension>().apply {
@@ -86,10 +84,9 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
-        dependency("org.learning.microservices:resource-service-api:1.0.0")
+        dependency("org.learning.microservices:resource-service-api:1.1.0")
         dependency("org.learning.microservices:song-service-api:1.2.0")
         dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
-        dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
 

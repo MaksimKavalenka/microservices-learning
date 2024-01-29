@@ -27,7 +27,6 @@
 - Song Service inbound adapter.
 
 #### Spring Microservices Starter
-- AWS S3 client.
 - Flyway before and after migration listeners.
 - REST exception handler.
 

@@ -1,6 +1,6 @@
-package org.learning.microservices.configuration;
+package org.learning.microservices.resource.configuration;
 
-import org.learning.microservices.configuration.properties.AwsProperties;
+import org.learning.microservices.resource.configuration.properties.AwsProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
