@@ -1,6 +1,7 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 
 plugins {
+    id("groovy")
     id("java")
     id("java-library")
     id("maven-publish")
@@ -17,6 +18,7 @@ configurations {
 
 allprojects {
     apply {
+        plugin("groovy")
         plugin("java")
         plugin("java-library")
         plugin("io.spring.dependency-management")
@@ -72,6 +74,8 @@ allprojects {
         imports {
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+            mavenBom("org.spockframework:spock-bom:2.4-M1-groovy-4.0")
+            mavenBom("org.testcontainers:testcontainers-bom:1.19.3")
         }
 
         dependencies {
@@ -107,9 +111,36 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
 
     implementation("software.amazon.awssdk:s3")
+
+    testImplementation("org.spockframework:spock-core")
+    testImplementation("org.spockframework:spock-spring")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:localstack")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.testcontainers:rabbitmq")
 }
 
 tasks.getByName<Jar>("jar") {
     enabled = false
     archiveClassifier.set("")
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    test {
+        groovy {
+            setSrcDirs(listOf("src/test/groovy", "src/test-integration/groovy"))
+        }
+        java {
+            setSrcDirs(listOf("src/test/java", "src/test-integration/java"))
+        }
+        resources {
+            setSrcDirs(listOf("src/test/resources", "src/test-integration/resources"))
+        }
+    }
 }
