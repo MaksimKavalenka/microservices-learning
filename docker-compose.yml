@@ -1,8 +1,28 @@
 version: '3.8'
 services:
+  localstack:
+    image: localstack/localstack
+    restart: on-failure
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      SERVICES: "s3:${LOCALSTACK_PORT}"
+    ports:
+      - "${LOCALSTACK_PORT}:4566"
+    volumes:
+      - ./tools/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: on-failure
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_PORT_UI}:15672"
+    volumes:
+      - ./tools/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./tools/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
   eureka-server:
     build: eureka-server
-    image: maksimkavalenka/eureka-server:1.0.0
+    image: maksimkavalenka/eureka-server:local
     restart: on-failure
     ports:
       - "${EUREKA_PORT}:8761"
@@ -16,10 +36,10 @@ services:
       - "${SONG_SERVICE_DATABASE_PORT}:5432"
   song-service:
     build: song-service
-    image: maksimkavalenka/song-service:1.0.0
+    image: maksimkavalenka/song-service:local
     restart: on-failure
     environment:
-      DATABASE_PORT: ${SONG_SERVICE_DATABASE_PORT}
+      DATABASE_DESTINATION_PORT: ${SONG_SERVICE_DATABASE_PORT}
       SPRING_APPLICATION_NAME: ${SONG_SERVICE_APPLICATION_NAME}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
@@ -39,19 +59,46 @@ services:
       - "${RESOURCE_SERVICE_DATABASE_PORT}:5432"
   resource-service:
     build: resource-service
-    image: maksimkavalenka/resource-service:1.0.0
+    image: maksimkavalenka/resource-service:local
     restart: on-failure
     environment:
-      DATABASE_PORT: ${RESOURCE_SERVICE_DATABASE_PORT}
-      INFRASTRUCTURE_SONGSERVICE_ALIAS: ${SONG_SERVICE_APPLICATION_NAME}
-      INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_APPLICATION_PORT}
+      AWS_DESTINATION_PORT: ${LOCALSTACK_PORT}
+      AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
+      AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
+      DATABASE_DESTINATION_PORT: ${RESOURCE_SERVICE_DATABASE_PORT}
       SPRING_APPLICATION_NAME: ${RESOURCE_SERVICE_APPLICATION_NAME}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_RABBITMQ_PORT: ${RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     ports:
       - "${RESOURCE_SERVICE_APPLICATION_PORT}:8080"
     depends_on:
+      - localstack
+      - rabbitmq
       - eureka-server
       - resource-service-postgres
+  resource-processor:
+    build: resource-processor
+    image: maksimkavalenka/resource-processor:local
+    restart: on-failure
+    environment:
+      AWS_DESTINATION_PORT: ${LOCALSTACK_PORT}
+      AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
+      AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
+      INFRASTRUCTURE_SONGSERVICE_ALIAS: ${SONG_SERVICE_APPLICATION_NAME}
+      INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_APPLICATION_PORT}
+      SPRING_APPLICATION_NAME: ${RESOURCE_PROCESSOR_APPLICATION_NAME}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_RABBITMQ_PORT: ${RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    ports:
+      - "${RESOURCE_PROCESSOR_APPLICATION_PORT}:8080"
+    depends_on:
+      - localstack
+      - rabbitmq
+      - eureka-server
       - song-service

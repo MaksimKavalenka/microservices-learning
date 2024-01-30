@@ -42,6 +42,21 @@ spring:
 
 ---
 
+# docker
+
+docker:
+  destination:
+    host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+  rabbitmq:
+    host: ${docker.destination.host}
+
+---
+
 # development
 
 aws:
