@@ -1,15 +1,8 @@
-aws:
-  destination:
-    host: localstack
-  s3:
-    bucketName: resources
-
 infrastructure:
+  resourceService:
+    host: resource-service
   songService:
     host: song-service
-
-rabbitmq:
-  host: rabbitmq
 
 service:
   expose:
@@ -17,7 +10,7 @@ service:
     api:
       health: /api/actuator/health
   image:
-    name: maksimkavalenka/resource-processor
+    name: maksimkavalenka/gateway
     tag: latest
   deployment:
     replicas: 2

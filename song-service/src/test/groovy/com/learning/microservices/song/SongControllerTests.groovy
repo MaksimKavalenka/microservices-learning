@@ -1,6 +1,7 @@
 package com.learning.microservices.song
 
 import org.learning.microservices.song.api.domain.SongRequest
+import org.learning.microservices.song.api.domain.SongResponse
 import org.learning.microservices.song.controller.SongController
 import org.learning.microservices.song.domain.SongEntity
 import org.learning.microservices.song.mapper.SongMapper
@@ -62,17 +63,23 @@ class SongControllerTests extends Specification {
                 .resourceId(1)
                 .build()
 
+        SongResponse response = SongResponse.builder()
+                .resourceId(1)
+                .build()
+
         when:
         when(songRepository.findById(1)).thenReturn(Optional.of(entity))
+        when(songMapper.toSongResponse(entity)).thenReturn(response)
 
         and:
-        SongEntity response = songController.getSong(1)
+        SongResponse result = songController.getSong(1)
 
         then:
-        response.getResourceId() == 1
+        result.getResourceId() == 1
 
         and:
         verify(songRepository, times(1)).findById(1) || true
+        verify(songMapper, times(1)).toSongResponse(entity) || true
     }
 
     def 'Song controller deletes a song'() {

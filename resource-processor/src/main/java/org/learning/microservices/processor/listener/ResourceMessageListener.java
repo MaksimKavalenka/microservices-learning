@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
+import org.learning.microservices.processor.client.SongServiceFeignClient;
 import org.learning.microservices.processor.exception.MessageProcessingException;
 import org.learning.microservices.processor.mapper.SongMapper;
 import org.learning.microservices.processor.service.AwsS3Service;
-import org.learning.microservices.processor.service.SongService;
 import org.learning.microservices.processor.util.FileParser;
 import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
 import org.learning.microservices.resource.api.message.ProcessResourceMessage;
@@ -27,7 +27,7 @@ public class ResourceMessageListener {
 
     private final AwsS3Service awsS3Service;
 
-    private final SongService songService;
+    private final SongServiceFeignClient songService;
 
     @Retryable
     @RabbitListener(queues = "#{'${spring.rabbitmq.queues.process}'.split(',')}")

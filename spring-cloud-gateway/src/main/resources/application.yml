@@ -1,0 +1,99 @@
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: localhost
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
+
+infrastructure:
+  resource-service:
+    alias: resource-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.resource-service.host}:${infrastructure.resource-service.port}
+  song-service:
+    alias: song-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+
+retry:
+  maxAttempts: 3
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: spring-cloud-gateway
+  config:
+    discovery:
+      enabled: true
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
+
+---
+
+# docker
+
+docker:
+  destination:
+    host: host.docker.internal
+
+eureka:
+  destination:
+    host: ${docker.destination.host}
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
+
+---
+
+# development
+
+infrastructure:
+  resource-service:
+    port: 8081
+  song-service:
+    port: 8082
+
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+
+server:
+  port: 8084
+
+spring:
+  config:
+    activate:
+      on-profile: "development"

@@ -4,11 +4,11 @@ metadata:
   name: {{ .Release.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1/resources$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$1/gateway$2
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-  - host: resource.service.com
+  - host: gateway.service.com
     http:
       paths:
       - path: /(api/v1)(.*)
