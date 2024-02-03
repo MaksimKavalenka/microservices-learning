@@ -10,6 +10,19 @@ aws:
   s3:
     bucket-name: resources
 
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: ${application.destination.host}
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
+
 infrastructure:
   song-service:
     alias: song-service

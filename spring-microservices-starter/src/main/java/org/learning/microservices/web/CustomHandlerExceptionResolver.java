@@ -1,5 +1,6 @@
 package org.learning.microservices.web;
 
+import feign.FeignException;
 import org.learning.microservices.domain.ErrorResponse;
 import org.learning.microservices.domain.ValidationErrorResponse;
 import org.learning.microservices.exception.DataNotFoundException;
@@ -30,8 +31,17 @@ public class CustomHandlerExceptionResolver extends ResponseEntityExceptionHandl
     }
 
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDataNotFoundException(RuntimeException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse errorResponse = createErrorResponse(ex, request, status);
+        return createResponseEntity(errorResponse, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<Object> handleFeignException(RuntimeException ex, WebRequest request) {
+        HttpStatus status = ex.getMessage().startsWith("[404]")
+                ? HttpStatus.NOT_FOUND
+                : HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorResponse errorResponse = createErrorResponse(ex, request, status);
         return createResponseEntity(errorResponse, new HttpHeaders(), status, request);
     }

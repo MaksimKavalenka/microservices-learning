@@ -7,6 +7,9 @@
 #### Eureka Server
 - Application (http://localhost:8761)
 
+#### Gateway
+- Application (http://localhost:8084)
+
 #### Resource Processor
 - Application (http://localhost:8083)
 
@@ -76,6 +79,7 @@ helm install rabbitmq bitnami/rabbitmq -f ./tools/rabbitmq/values.yaml
 helm install song-service microservices-learning/song-service
 helm install resource-service microservices-learning/resource-service
 helm install resource-processor microservices-learning/resource-processor
+helm install gateway microservices-learning/gateway
 ```
 
 ### Docker

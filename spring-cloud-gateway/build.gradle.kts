@@ -7,6 +7,9 @@ plugins {
     id("org.springframework.boot") version "3.1.4"
 }
 
+apply(plugin = "io.spring.dependency-management")
+apply(plugin = "maven-publish")
+
 configurations {
     listOf(apiElements, runtimeElements).forEach {
         val jar by tasks
@@ -15,17 +18,21 @@ configurations {
     }
 }
 
-allprojects {
-    apply {
-        plugin("java")
-        plugin("java-library")
-        plugin("io.spring.dependency-management")
-        plugin("maven-publish")
+repositories {
+    mavenCentral()
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
+        credentials {
+            username = project.findProperty("gpr.user") as String
+            password = project.findProperty("gpr.key") as String
+        }
     }
+}
 
+configure<PublishingExtension> {
     repositories {
-        mavenCentral()
-
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
@@ -36,59 +43,41 @@ allprojects {
         }
     }
 
-    configure<PublishingExtension> {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/MaksimKavalenka/microservices-learning")
-                credentials {
-                    username = project.findProperty("gpr.user") as String
-                    password = project.findProperty("gpr.key") as String
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
                 }
             }
         }
+    }
+}
 
-        publications {
-            register<MavenPublication>("gpr") {
-                from(components["java"])
-                versionMapping {
-                    usage("java-api") {
-                        fromResolutionOf("runtimeClasspath")
-                    }
-                    usage("java-runtime") {
-                        fromResolutionResult()
-                    }
-                }
-            }
-        }
+the<DependencyManagementExtension>().apply {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
     }
 
     dependencies {
-        annotationProcessor("org.projectlombok:lombok")
-        compileOnly("org.projectlombok:lombok")
-    }
-
-    the<DependencyManagementExtension>().apply {
-        imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
-        }
-
-        dependencies {
-            dependency("org.learning.microservices:resource-service-api:1.1.0")
-            dependency("org.learning.microservices:song-service-api:1.2.0")
-            dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
-        }
-    }
-
-    tasks.getByName<Jar>("jar") {
-        archiveClassifier.set("")
+        dependency("org.learning.microservices:resource-service-api:1.1.0")
+        dependency("org.learning.microservices:song-service-api:1.2.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
     }
 }
 
 dependencies {
     implementation("org.learning.microservices:resource-service-api")
     implementation("org.learning.microservices:song-service-api")
+    implementation("org.learning.microservices:spring-microservices-starter")
+
+    annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
 
     implementation("org.slf4j:slf4j-api")
 

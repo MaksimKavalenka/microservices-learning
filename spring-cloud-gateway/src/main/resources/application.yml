@@ -1,10 +1,14 @@
+application:
+  destination:
+    host: localhost
+
 eureka:
   client:
     enabled: false
     serviceUrl:
       defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 8761
   instance:
     appname: ${spring.application.name}
@@ -33,7 +37,7 @@ server:
 
 spring:
   application:
-    name: spring-cloud-gateway
+    name: gateway
   config:
     discovery:
       enabled: true
@@ -46,13 +50,9 @@ spring:
 
 # docker
 
-docker:
+application:
   destination:
     host: host.docker.internal
-
-eureka:
-  destination:
-    host: ${docker.destination.host}
 
 spring:
   config:

@@ -57,6 +57,21 @@ configure<PublishingExtension> {
     }
 }
 
+the<DependencyManagementExtension>().apply {
+    imports {
+        mavenBom("org.apache.tika:tika-bom:2.9.0")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+        mavenBom("software.amazon.awssdk:s3:2.22.13")
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
+
+    dependencies {
+        dependency("org.learning.microservices:resource-service-api:1.1.0")
+        dependency("org.learning.microservices:song-service-api:1.2.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+    }
+}
+
 dependencies {
     implementation("org.apache.tika:tika-core")
     implementation("org.apache.tika:tika-parsers-standard-package")
@@ -71,26 +86,14 @@ dependencies {
     implementation("org.slf4j:slf4j-api")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.retry:spring-retry")
 
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 
+    implementation("org.springframework.retry:spring-retry")
+
     implementation("software.amazon.awssdk:s3")
-}
-
-the<DependencyManagementExtension>().apply {
-    imports {
-        mavenBom("org.apache.tika:tika-bom:2.9.0")
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
-        mavenBom("software.amazon.awssdk:s3:2.22.13")
-    }
-
-    dependencies {
-        dependency("org.learning.microservices:resource-service-api:1.1.0")
-        dependency("org.learning.microservices:song-service-api:1.2.0")
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
-    }
 }
 
 tasks.getByName<Jar>("jar") {

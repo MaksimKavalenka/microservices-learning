@@ -76,9 +76,9 @@ services:
     ports:
       - "${RESOURCE_SERVICE_APPLICATION_PORT}:8080"
     depends_on:
+      - eureka-server
       - localstack
       - rabbitmq
-      - eureka-server
       - resource-service-postgres
   resource-processor:
     build: resource-processor
@@ -98,7 +98,24 @@ services:
     ports:
       - "${RESOURCE_PROCESSOR_APPLICATION_PORT}:8080"
     depends_on:
+      - eureka-server
       - localstack
       - rabbitmq
+      - song-service
+  gateway:
+    build: spring-cloud-gateway
+    image: maksimkavalenka/gateway:local
+    restart: on-failure
+    environment:
+      INFRASTRUCTURE_RESOURCESERVICE_ALIAS: ${RESOURCE_SERVICE_APPLICATION_NAME}
+      INFRASTRUCTURE_RESOURCESERVICE_PORT: ${RESOURCE_SERVICE_APPLICATION_PORT}
+      INFRASTRUCTURE_SONGSERVICE_ALIAS: ${SONG_SERVICE_APPLICATION_NAME}
+      INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_APPLICATION_PORT}
+      SPRING_APPLICATION_NAME: ${GATEWAY_APPLICATION_NAME}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    ports:
+      - "${GATEWAY_APPLICATION_PORT}:8080"
+    depends_on:
       - eureka-server
+      - resource-service
       - song-service
