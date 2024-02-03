@@ -1,6 +1,10 @@
-aws:
+application:
   destination:
     host: localhost
+
+aws:
+  destination:
+    host: ${application.destination.host}
     port: 4566
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
@@ -9,7 +13,7 @@ aws:
 infrastructure:
   song-service:
     alias: song-service
-    host: localhost
+    host: ${application.destination.host}
     port: 8080
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
 
@@ -28,10 +32,8 @@ spring:
     discovery:
       enabled: true
   rabbitmq:
-    host: localhost
+    host: ${application.destination.host}
     port: 5672
-    username: admin
-    password: admin
     queues:
       process: queue.resources.process,queue.resources.process.dlq
       delete: queue.resources.delete,queue.resources.delete.dlq
@@ -44,7 +46,7 @@ spring:
 
 # docker
 
-docker:
+application:
   destination:
     host: host.docker.internal
 
@@ -52,8 +54,19 @@ spring:
   config:
     activate:
       on-profile: "docker"
-  rabbitmq:
-    host: ${docker.destination.host}
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
 
 ---
 

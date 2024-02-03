@@ -1,10 +1,12 @@
 application:
   deletion:
     limit: 200
+  destination:
+    host: localhost
 
 database:
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 5432
     name: song_service
     schema: song_service
@@ -15,7 +17,7 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 8761
   instance:
     appname: ${spring.application.name}
@@ -55,17 +57,9 @@ spring:
 
 # docker
 
-docker:
+application:
   destination:
     host: host.docker.internal
-
-database:
-  destination:
-    host: ${docker.destination.host}
-
-eureka:
-  destination:
-    host: ${docker.destination.host}
 
 spring:
   config:

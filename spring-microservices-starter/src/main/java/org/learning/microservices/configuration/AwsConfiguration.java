@@ -1,6 +1,6 @@
-package org.learning.microservices.resource.configuration;
+package org.learning.microservices.configuration;
 
-import org.learning.microservices.resource.configuration.properties.AwsProperties;
+import org.learning.microservices.configuration.properties.AwsProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-public class AwsS3Configuration {
+public class AwsConfiguration {
 
     @Bean
     @ConditionalOnProperty("aws.s3.bucket-name")

@@ -75,12 +75,15 @@ dependencies {
 
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
+
+    implementation("software.amazon.awssdk:s3")
 }
 
 the<DependencyManagementExtension>().apply {
     imports {
         mavenBom("org.apache.tika:tika-bom:2.9.0")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+        mavenBom("software.amazon.awssdk:s3:2.22.13")
     }
 
     dependencies {

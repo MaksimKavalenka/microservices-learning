@@ -68,6 +68,7 @@ public class ResourceController {
 
         ProcessResourceMessage message = ProcessResourceMessage.builder()
                 .id(resource.getId())
+                .s3Key(s3Key)
                 .build();
 
         BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(PROCESS_BINDING_KEY);

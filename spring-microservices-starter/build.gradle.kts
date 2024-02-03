@@ -44,11 +44,17 @@ dependencies {
 
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-starter-web")
+
+    api("software.amazon.awssdk:s3")
 }
 
 dependencyManagement {
     imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:3.1.4")
+    }
+
+    dependencies {
+        dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
 
