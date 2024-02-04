@@ -74,21 +74,15 @@ the<DependencyManagementExtension>().apply {
 dependencies {
     implementation("org.learning.microservices:resource-service-api")
     implementation("org.learning.microservices:song-service-api")
-    implementation("org.learning.microservices:spring-microservices-starter")
 
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
 
     implementation("org.slf4j:slf4j-api")
 
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-
+    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-
-    implementation("org.springframework.retry:spring-retry")
 }
 
 tasks.getByName<Jar>("jar") {

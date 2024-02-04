@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b5018210-6e09-402d-bace-93efb88416d7",
-		"name": "Microservices Learning",
+		"_postman_id": "5553f37a-321e-46aa-899f-7dac3e1a6a4f",
+		"name": "Resource Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1208226"
 	},
@@ -49,24 +49,6 @@
 					],
 					"path": [
 						"{id}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Resource Metadata",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}{{path}}/{id}/metadata",
-					"host": [
-						"{{url}}{{path}}"
-					],
-					"path": [
-						"{id}",
-						"metadata"
 					]
 				}
 			},
@@ -121,7 +103,7 @@
 		},
 		{
 			"key": "path",
-			"value": "/api/v1/gateway",
+			"value": "/api/v1/resources",
 			"type": "string"
 		}
 	]

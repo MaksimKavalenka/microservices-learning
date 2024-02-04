@@ -38,6 +38,17 @@ server:
 spring:
   application:
     name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: resource_service
+          uri: ${infrastructure.resource-service.url}
+          predicates:
+            - Path=/api/v1/resources,/api/v1/resources/**
+        - id: song_service
+          uri: ${infrastructure.song-service.url}
+          predicates:
+            - Path=/api/v1/songs,/api/v1/songs/**
   config:
     discovery:
       enabled: true
@@ -68,6 +79,11 @@ eureka:
     enabled: true
 
 spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
   config:
     activate:
       on-profile: "eureka"

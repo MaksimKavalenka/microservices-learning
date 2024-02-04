@@ -52,8 +52,6 @@ the<DependencyManagementExtension>().apply {
 }
 
 dependencies {
-    api("io.github.openfeign:feign-core")
-
     api("org.apache.tomcat.embed:tomcat-embed-core")
     api("org.flywaydb:flyway-core")
 
