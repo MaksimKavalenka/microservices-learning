@@ -63,18 +63,9 @@ the<DependencyManagementExtension>().apply {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
     }
-
-    dependencies {
-        dependency("org.learning.microservices:resource-service-api:1.1.0")
-        dependency("org.learning.microservices:song-service-api:1.2.0")
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
-    }
 }
 
 dependencies {
-    implementation("org.learning.microservices:resource-service-api")
-    implementation("org.learning.microservices:song-service-api")
-
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
 
