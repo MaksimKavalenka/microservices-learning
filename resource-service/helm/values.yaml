@@ -22,7 +22,7 @@ service:
     api:
       health: /api/actuator/health
   image:
-    name: maksimkavalenka/resource-service
+    name: maksimkavalenka/microservices-learning.resource-service
     tag: latest
   deployment:
     replicas: 2

@@ -10,7 +10,7 @@ service:
     api:
       health: /api/actuator/health
   image:
-    name: maksimkavalenka/gateway
+    name: maksimkavalenka/microservices-learning.gateway
     tag: latest
   deployment:
     replicas: 2
