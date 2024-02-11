@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.microservices.song.api.domain.SongRequest;
+import org.learning.microservices.song.api.domain.SongResponse;
 import org.learning.microservices.song.domain.SongEntity;
 import org.learning.microservices.song.mapper.SongMapper;
 import org.learning.microservices.song.repository.SongRepository;
@@ -42,9 +43,10 @@ public class SongController {
     }
 
     @GetMapping("/{id}")
-    public SongEntity getSong(@PathVariable("id") @Positive Integer id) {
-        return repository.findById(id)
+    public SongResponse getSong(@PathVariable("id") @Positive Integer id) {
+        SongEntity song = repository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException(id));
+        return mapper.toSongResponse(song);
     }
 
     @DeleteMapping

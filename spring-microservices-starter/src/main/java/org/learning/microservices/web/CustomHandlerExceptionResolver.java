@@ -30,7 +30,7 @@ public class CustomHandlerExceptionResolver extends ResponseEntityExceptionHandl
     }
 
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDataNotFoundException(RuntimeException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse errorResponse = createErrorResponse(ex, request, status);
         return createResponseEntity(errorResponse, new HttpHeaders(), status, request);

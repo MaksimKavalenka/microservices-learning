@@ -4,14 +4,13 @@ import org.learning.microservices.resource.configuration.properties.RabbitBindin
 import org.learning.microservices.resource.controller.ResourceController
 import org.learning.microservices.resource.domain.ResourceEntity
 import org.learning.microservices.resource.repository.ResourceRepository
-import org.learning.microservices.resource.service.AwsS3Service
+import org.learning.microservices.service.AwsS3Service
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
 import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.*
-import static org.mockito.ArgumentMatchers.any
-import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 
 class ResourceControllerTests extends Specification {

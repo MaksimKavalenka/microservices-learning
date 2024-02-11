@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+  namespace: {{ .Release.Namespace }}
+  {{- template "resource-processor.labels" . }}
+data:
+  INFRASTRUCTURE_RESOURCESERVICE_HOST: {{ .Values.infrastructure.resourceService.host }}.{{ .Release.Namespace }}
+  INFRASTRUCTURE_SONGSERVICE_HOST: {{ .Values.infrastructure.songService.host }}.{{ .Release.Namespace }}
+  SPRING_APPLICATION_NAME: {{ .Release.Name }}

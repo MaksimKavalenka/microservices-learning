@@ -1,7 +1,7 @@
 package com.learning.microservices.resource
 
 import org.learning.microservices.resource.ResourceServiceApplication
-import org.learning.microservices.resource.service.AwsS3Service
+import org.learning.microservices.service.AwsS3Service
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc

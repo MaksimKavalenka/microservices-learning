@@ -65,31 +65,36 @@ allprojects {
         }
     }
 
+    the<DependencyManagementExtension>().apply {
+        imports {
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        }
+    }
+
     dependencies {
         annotationProcessor("org.projectlombok:lombok")
         compileOnly("org.projectlombok:lombok")
     }
 
-    the<DependencyManagementExtension>().apply {
-        imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
-            mavenBom("org.spockframework:spock-bom:2.4-M1-groovy-4.0")
-            mavenBom("org.testcontainers:testcontainers-bom:1.19.3")
-        }
-
-        dependencies {
-            dependencySet("org.mapstruct:1.5.5.Final") {
-                entry("mapstruct")
-                entry("mapstruct-processor")
-            }
-
-            dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
-        }
-    }
-
     tasks.getByName<Jar>("jar") {
         archiveClassifier.set("")
+    }
+}
+
+the<DependencyManagementExtension>().apply {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+        mavenBom("org.spockframework:spock-bom:2.4-M1-groovy-4.0")
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
+
+    dependencies {
+        dependencySet("org.mapstruct:1.5.5.Final") {
+            entry("mapstruct")
+            entry("mapstruct-processor")
+        }
+
+        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
     }
 }
 

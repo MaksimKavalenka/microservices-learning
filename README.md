@@ -7,6 +7,9 @@
 #### Eureka Server
 - Application (http://localhost:8761)
 
+#### Gateway
+- Application (http://localhost:8084)
+
 #### Resource Processor
 - Application (http://localhost:8083)
 
@@ -27,6 +30,7 @@
 - Song Service inbound adapter.
 
 #### Spring Microservices Starter
+- AWS S3 client.
 - Flyway before and after migration listeners.
 - REST exception handler.
 
@@ -41,6 +45,8 @@
 ## Binaries
 
 ### Artifacts
+- [Eureka Server](https://github.com/MaksimKavalenka/microservices-learning/packages/2064895)
+- [Gateway](https://github.com/MaksimKavalenka/microservices-learning/packages/2064892)
 - [Resource Processor](https://github.com/MaksimKavalenka/microservices-learning/packages/2046204)
 - [Resource Service](https://github.com/MaksimKavalenka/microservices-learning/packages/2043819)
 - [Resource Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2046203)
@@ -49,9 +55,11 @@
 - [Spring Microservices Starter](https://github.com/MaksimKavalenka/microservices-learning/packages/2043488)
 
 ### Docker Images
-- [Resource Processor](https://hub.docker.com/r/maksimkavalenka/resource-processor)
-- [Resource Service](https://hub.docker.com/r/maksimkavalenka/resource-service)
-- [Song Service](https://hub.docker.com/r/maksimkavalenka/song-service)
+- [Eureka Server](https://hub.docker.com/r/maksimkavalenka/microservices-learning.eureka-server)
+- [Gateway](https://hub.docker.com/r/maksimkavalenka/microservices-learning.gateway)
+- [Resource Processor](https://hub.docker.com/r/maksimkavalenka/microservices-learning.resource-processor)
+- [Resource Service](https://hub.docker.com/r/maksimkavalenka/microservices-learning.resource-service)
+- [Song Service](https://hub.docker.com/r/maksimkavalenka/microservices-learning.song-service)
 
 ### Helm Charts
 
@@ -75,6 +83,7 @@ helm install rabbitmq bitnami/rabbitmq -f ./tools/rabbitmq/values.yaml
 helm install song-service microservices-learning/song-service
 helm install resource-service microservices-learning/resource-service
 helm install resource-processor microservices-learning/resource-processor
+helm install gateway microservices-learning/gateway
 ```
 
 ### Docker

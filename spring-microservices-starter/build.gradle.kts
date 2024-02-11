@@ -1,9 +1,13 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+
 plugins {
     id("java")
     id("java-library")
-    id("io.spring.dependency-management") version "1.1.3"
     id("maven-publish")
+    id("org.springframework.boot") version "3.1.4" apply false
 }
+
+apply(plugin = "io.spring.dependency-management")
 
 repositories {
     mavenCentral()
@@ -36,20 +40,31 @@ configure<PublishingExtension> {
     }
 }
 
+the<DependencyManagementExtension>().apply {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
+
+    dependencies {
+        dependency("software.amazon.awssdk:s3:2.22.13")
+    }
+}
+
 dependencies {
+    api("org.apache.tomcat.embed:tomcat-embed-core")
     api("org.flywaydb:flyway-core")
 
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
 
-    api("org.springframework.boot:spring-boot-starter-data-jpa")
-    api("org.springframework.boot:spring-boot-starter-web")
-}
+    api("org.springframework:spring-web")
+    api("org.springframework:spring-webmvc")
+    api("org.springframework.boot:spring-boot")
+    api("org.springframework.boot:spring-boot-autoconfigure")
+    api("org.springframework.data:spring-data-jpa")
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:3.1.4")
-    }
+    api("software.amazon.awssdk:s3")
 }
 
 tasks.getByName<Jar>("jar") {

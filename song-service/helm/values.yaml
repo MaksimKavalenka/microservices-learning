@@ -13,7 +13,7 @@ service:
     api:
       health: /api/actuator/health
   image:
-    name: maksimkavalenka/song-service
+    name: maksimkavalenka/microservices-learning.song-service
     tag: latest
   deployment:
     replicas: 2

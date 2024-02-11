@@ -4,6 +4,10 @@ aws:
   s3:
     bucketName: resources
 
+infrastructure:
+  songService:
+    host: song-service
+
 rabbitmq:
   host: rabbitmq
 
@@ -13,7 +17,7 @@ service:
     api:
       health: /api/actuator/health
   image:
-    name: maksimkavalenka/resource-processor
+    name: maksimkavalenka/microservices-learning.resource-processor
     tag: latest
   deployment:
     replicas: 2

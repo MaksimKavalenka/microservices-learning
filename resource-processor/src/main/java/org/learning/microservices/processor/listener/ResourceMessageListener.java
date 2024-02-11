@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
+import org.learning.microservices.processor.client.SongServiceFeignClient;
 import org.learning.microservices.processor.exception.MessageProcessingException;
 import org.learning.microservices.processor.mapper.SongMapper;
-import org.learning.microservices.processor.service.SongService;
 import org.learning.microservices.processor.util.FileParser;
 import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
 import org.learning.microservices.resource.api.message.ProcessResourceMessage;
-import org.learning.microservices.resource.api.service.ResourceService;
+import org.learning.microservices.service.AwsS3Service;
 import org.learning.microservices.song.api.domain.SongRequest;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.Message;
@@ -25,9 +25,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ResourceMessageListener {
 
-    private final ResourceService resourceService;
+    private final AwsS3Service awsS3Service;
 
-    private final SongService songService;
+    private final SongServiceFeignClient songService;
 
     @Retryable
     @RabbitListener(queues = "#{'${spring.rabbitmq.queues.process}'.split(',')}")
@@ -35,7 +35,7 @@ public class ResourceMessageListener {
         try {
             log.info("Message is received: {}", message.getPayload());
 
-            byte[] content = resourceService.getResource(message.getPayload().getId());
+            byte[] content = awsS3Service.getObjectBytes(message.getPayload().getS3Key());
             Metadata metadata = FileParser.getMp3Metadata(content);
             SongRequest songRequest = SongMapper.toSongRequest(message.getPayload().getId(), metadata);
             songService.saveSong(songRequest);

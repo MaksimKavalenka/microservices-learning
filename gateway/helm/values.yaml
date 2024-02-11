@@ -1,0 +1,16 @@
+infrastructure:
+  resourceService:
+    host: resource-service
+  songService:
+    host: song-service
+
+service:
+  expose:
+    port: 8080
+    api:
+      health: /api/actuator/health
+  image:
+    name: maksimkavalenka/microservices-learning.gateway
+    tag: latest
+  deployment:
+    replicas: 2

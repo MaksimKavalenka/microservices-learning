@@ -18,14 +18,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/v1/resources",
+					"raw": "{{url}}{{path}}",
 					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"resources"
+						"{{url}}{{path}}"
 					]
 				}
 			},
@@ -48,14 +43,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/v1/resources/{id}",
+					"raw": "{{url}}{{path}}/{id}",
 					"host": [
-						"{{url}}"
+						"{{url}}{{path}}"
 					],
 					"path": [
-						"api",
-						"v1",
-						"resources",
 						"{id}"
 					]
 				}
@@ -68,14 +60,9 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/v1/resources?id=1,2,3",
+					"raw": "{{url}}{{path}}?id=1,2,3",
 					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"resources"
+						"{{url}}{{path}}"
 					],
 					"query": [
 						{
@@ -111,7 +98,12 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://localhost:8081",
+			"value": "http://localhost:8084",
+			"type": "string"
+		},
+		{
+			"key": "path",
+			"value": "/api/v1/resources",
 			"type": "string"
 		}
 	]

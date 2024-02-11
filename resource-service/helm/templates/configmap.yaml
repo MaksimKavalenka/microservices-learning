@@ -5,8 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
   {{- template "resource-service.labels" . }}
 data:
-  AWS_DESTINATION_HOST: {{ .Values.aws.destination.host }}
+  AWS_DESTINATION_HOST: {{ .Values.aws.destination.host }}.{{ .Release.Namespace }}
   AWS_S3_BUCKETNAME: {{ .Values.aws.s3.bucketName }}
   DATABASE_DESTINATION_HOST: {{ .Release.Name }}-postgres.{{ .Release.Namespace }}
   SPRING_APPLICATION_NAME: {{ .Release.Name }}
-  SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host }}
+  SPRING_RABBITMQ_HOST: {{ .Values.rabbitmq.host }}.{{ .Release.Namespace }}

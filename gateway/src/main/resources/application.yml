@@ -1,0 +1,115 @@
+application:
+  destination:
+    host: localhost
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: ${application.destination.host}
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
+
+infrastructure:
+  resource-service:
+    alias: resource-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.resource-service.host}:${infrastructure.resource-service.port}
+  song-service:
+    alias: song-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+
+retry:
+  maxAttempts: 3
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: resource_service
+          uri: ${infrastructure.resource-service.url}
+          predicates:
+            - Path=/api/v1/resources,/api/v1/resources/**
+        - id: song_service
+          uri: ${infrastructure.song-service.url}
+          predicates:
+            - Path=/api/v1/songs,/api/v1/songs/**
+  config:
+    discovery:
+      enabled: true
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
+
+---
+
+# docker
+
+application:
+  destination:
+    host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+  config:
+    activate:
+      on-profile: "eureka"
+
+---
+
+# development
+
+infrastructure:
+  resource-service:
+    port: 8081
+  song-service:
+    port: 8082
+
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+
+server:
+  port: 8084
+
+spring:
+  config:
+    activate:
+      on-profile: "development"

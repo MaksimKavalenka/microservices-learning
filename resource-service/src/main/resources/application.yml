@@ -2,10 +2,12 @@ application:
   data:
     deletion:
       limit: 200
+  destination:
+    host: localhost
 
 aws:
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 4566
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
@@ -13,7 +15,7 @@ aws:
 
 database:
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 5432
     name: resource_service
     schema: resource_service
@@ -24,7 +26,7 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
   destination:
-    host: localhost
+    host: ${application.destination.host}
     port: 8761
   instance:
     appname: ${spring.application.name}
@@ -62,7 +64,7 @@ spring:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
   rabbitmq:
-    host: localhost
+    host: ${application.destination.host}
     port: 5672
     bindings:
       process:
@@ -80,24 +82,14 @@ spring:
 
 # docker
 
-docker:
+application:
   destination:
     host: host.docker.internal
-
-database:
-  destination:
-    host: ${docker.destination.host}
-
-eureka:
-  destination:
-    host: ${docker.destination.host}
 
 spring:
   config:
     activate:
       on-profile: "docker"
-  rabbitmq:
-    host: ${docker.destination.host}
 
 ---
 

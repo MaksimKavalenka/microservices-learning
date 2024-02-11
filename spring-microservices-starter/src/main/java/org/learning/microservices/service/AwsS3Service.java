@@ -1,8 +1,7 @@
-package org.learning.microservices.resource.service;
+package org.learning.microservices.service;
 
 import lombok.RequiredArgsConstructor;
-import org.learning.microservices.resource.configuration.properties.AwsProperties;
-import org.springframework.stereotype.Service;
+import org.learning.microservices.configuration.properties.AwsProperties;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.model.*;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
 public class AwsS3Service {
 
