@@ -1,5 +1,1 @@
 startServices: s3
-enableStartupScripts: true
-startupScriptContent: |
-  #!/bin/sh
-  awslocal s3api create-bucket --bucket resources

@@ -9,8 +9,6 @@ services:
       SERVICES: "s3:${LOCALSTACK_PORT}"
     ports:
       - "${LOCALSTACK_PORT}:4566"
-    volumes:
-      - ./tools/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
   rabbitmq:
     image: rabbitmq:3-management-alpine
     restart: on-failure
@@ -26,6 +24,33 @@ services:
     restart: on-failure
     ports:
       - "${EUREKA_PORT}:8761"
+  storage-service-postgres:
+    image: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${STORAGE_SERVICE_DATABASE_PORT}:5432"
+  storage-service:
+    build: storage-service
+    image: maksimkavalenka/storage-service:local
+    restart: on-failure
+    environment:
+      AWS_DESTINATION_PORT: ${LOCALSTACK_PORT}
+      AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
+      AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
+      DATABASE_DESTINATION_PORT: ${STORAGE_SERVICE_DATABASE_PORT}
+      SPRING_APPLICATION_NAME: ${STORAGE_SERVICE_APPLICATION_NAME}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    ports:
+      - "${STORAGE_SERVICE_APPLICATION_PORT}:8080"
+    depends_on:
+      - eureka-server
+      - localstack
+      - storage-service-postgres
   song-service-postgres:
     image: postgres
     restart: on-failure
@@ -80,6 +105,7 @@ services:
       - localstack
       - rabbitmq
       - resource-service-postgres
+      - storage-service
   resource-processor:
     build: resource-processor
     image: maksimkavalenka/resource-processor:local
@@ -102,6 +128,7 @@ services:
       - localstack
       - rabbitmq
       - song-service
+      - storage-service
   gateway:
     build: spring-cloud-gateway
     image: maksimkavalenka/gateway:local

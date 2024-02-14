@@ -1,0 +1,131 @@
+application:
+  deletion:
+    limit: 200
+  destination:
+    host: localhost
+
+aws:
+  destination:
+    host: ${application.destination.host}
+    port: 4566
+    url: http://${aws.destination.host}:${aws.destination.port}
+  s3:
+    enabled: true
+
+database:
+  destination:
+    host: ${application.destination.host}
+    port: 5432
+    name: storage_service
+    schema: storage_service
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: ${application.destination.host}
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
+
+flyway:
+  database:
+    create-if-not-exists: true
+
+retry:
+  maxAttempts: 3
+
+server:
+  port: 8080
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: storage-service
+  config:
+    discovery:
+      enabled: true
+  datasource:
+    hikari:
+      schema: ${database.destination.schema}
+    url: jdbc:postgresql://${database.destination.host}:${database.destination.port}/${database.destination.name}
+  flyway:
+    schemas: ${database.destination.schema}
+    table: schema_version
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+  servlet:
+    multipart:
+      maxFileSize: -1
+      maxRequestSize: -1
+
+---
+
+# docker
+
+application:
+  destination:
+    host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
+
+---
+
+# development
+
+aws:
+  auth:
+    access-key-id: test
+    secret-access-key: test
+
+database:
+  destination:
+    port: 5405
+
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+
+server:
+  port: 8085
+
+spring:
+  config:
+    activate:
+      on-profile: "development"
+  datasource:
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

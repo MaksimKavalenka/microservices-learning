@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-postgres
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: {{ .Release.Name }}-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: postgres-port
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: {{ .Release.Name }}
+  ports:
+    - name: web-port
+      protocol: TCP
+      port: 8080
+      targetPort: service-port
