@@ -38,7 +38,7 @@ public class AwsProperties {
     @Data
     public static class S3Properties {
 
-        private String bucketName;
+        private boolean enabled;
 
     }
 

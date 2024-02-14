@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 @Configuration
 public class AwsConfiguration {
 
-    @ConditionalOnProperty("aws.s3.bucket-name")
+    @ConditionalOnProperty("aws.s3.enabled")
     public static class AwsS3Configuration {
 
         @Bean
@@ -35,8 +35,8 @@ public class AwsConfiguration {
         }
 
         @Bean
-        public AwsS3Service awsS3Service(AwsProperties awsProperties, S3ClientBuilder s3ClientBuilder) {
-            return new AwsS3Service(awsProperties, s3ClientBuilder);
+        public AwsS3Service awsS3Service(S3ClientBuilder s3ClientBuilder) {
+            return new AwsS3Service(s3ClientBuilder);
         }
 
     }
