@@ -27,6 +27,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
 
         maven {
             name = "GitHubPackages"
@@ -94,7 +95,7 @@ the<DependencyManagementExtension>().apply {
             entry("mapstruct-processor")
         }
 
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
     }
 }
 

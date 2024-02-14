@@ -27,6 +27,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
 
         maven {
             name = "GitHubPackages"
@@ -89,7 +90,8 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
+        dependency("org.learning.microservices:storage-service-api:1.0.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
@@ -100,6 +102,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.learning.microservices:spring-microservices-starter")
+    implementation("org.learning.microservices:storage-service-api")
 
     implementation("org.postgresql:postgresql")
 
@@ -111,6 +114,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 
     implementation("org.springframework.retry:spring-retry")

@@ -37,6 +37,13 @@ flyway:
   database:
     create-if-not-exists: true
 
+infrastructure:
+  storage-service:
+    alias: storage-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.storage-service.host}:${infrastructure.storage-service.port}
+
 retry:
   maxAttempts: 3
 
@@ -116,6 +123,10 @@ aws:
 database:
   destination:
     port: 5401
+
+infrastructure:
+  storage-service:
+    port: 8085
 
 logging:
   level:

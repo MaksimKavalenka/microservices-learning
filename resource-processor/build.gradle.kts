@@ -19,6 +19,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 
     maven {
         name = "GitHubPackages"
@@ -68,7 +69,8 @@ the<DependencyManagementExtension>().apply {
     dependencies {
         dependency("org.learning.microservices:resource-service-api:1.1.0")
         dependency("org.learning.microservices:song-service-api:1.2.0")
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:storage-service-api:1.0.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
     }
 }
 
@@ -78,6 +80,7 @@ dependencies {
 
     implementation("org.learning.microservices:resource-service-api")
     implementation("org.learning.microservices:song-service-api")
+    implementation("org.learning.microservices:storage-service-api")
     implementation("org.learning.microservices:spring-microservices-starter")
 
     annotationProcessor("org.projectlombok:lombok")

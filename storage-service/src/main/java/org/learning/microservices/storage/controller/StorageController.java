@@ -1,10 +1,8 @@
 package org.learning.microservices.storage.controller;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.microservices.storage.api.domain.StorageRequest;
 import org.learning.microservices.storage.api.domain.StorageResponse;
 import org.learning.microservices.storage.domain.StorageEntity;
@@ -22,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/v1/storages")
@@ -58,11 +57,11 @@ public class StorageController {
         }
     }
 
-    @GetMapping("/{id}")
-    public StorageResponse getStorage(@PathVariable("id") @Positive Integer id) {
-        StorageEntity storage = repository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException(id));
-        return mapper.toStorageResponse(storage);
+    @GetMapping
+    public List<StorageResponse> getStorages() {
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .map(mapper::toStorageResponse)
+                .toList();
     }
 
     @Retryable
