@@ -22,8 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -54,15 +52,12 @@ public class ResourceController {
 
     @Retryable
     @PostMapping(consumes = "audio/mpeg")
-    public Map<String, Object> uploadResource(@RequestBody byte[] content) throws IOException {
+    public Map<String, Object> uploadResource(@RequestBody byte[] content) {
         String s3Key = RandomStringUtils.randomAlphanumeric(16);
 
         // Write a resource to S3
         StorageResponse stagingStorage = storages.get("staging");
-        Path path = Path.of(stagingStorage.getPath(), s3Key);
-        Files.write(path, content);
-        awsS3Service.putObject(s3Key, stagingStorage.getBucketName(), path);
-        Files.delete(path);
+        awsS3Service.putObject(s3Key, stagingStorage.getBucketName(), content);
 
         // Save a resource in DB
         ResourceEntity resource = ResourceEntity.builder().s3Key(s3Key).build();

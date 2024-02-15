@@ -51,6 +51,24 @@ extraSecrets:
             }
           },
           {
+            "name": "queue.resources.processed.ack",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+              "x-dead-letter-exchange": "queue.resources.processed.ack.dlq"
+            }
+          },
+          {
+            "name": "queue.resources.processed.ack.dlq",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {
+              "x-dead-letter-exchange": "queue.resources.processed.ack.dlq"
+            }
+          },
+          {
             "name": "queue.resources.delete",
             "vhost": "/",
             "durable": true,
@@ -95,6 +113,22 @@ extraSecrets:
             "destination": "queue.resources.process.dlq",
             "destination_type": "queue",
             "routing_key": "DOMAIN.RESOURCE.PROCESS.DLQ",
+            "arguments": {}
+          },
+          {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.processed.ack",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.PROCESSED.ACK",
+            "arguments": {}
+          },
+          {
+            "source": "topic.resources",
+            "vhost": "/",
+            "destination": "queue.resources.processed.ack.dlq",
+            "destination_type": "queue",
+            "routing_key": "DOMAIN.RESOURCE.PROCESSED.ACK.DLQ",
             "arguments": {}
           },
           {

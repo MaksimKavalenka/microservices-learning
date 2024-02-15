@@ -11,7 +11,7 @@ aws:
     port: 4566
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
-    bucket-name: resources
+    enabled: true
 
 database:
   destination:
@@ -80,6 +80,8 @@ spring:
       delete:
         source: topic.resources
         routing-key: DOMAIN.RESOURCE.DELETE
+    queues:
+      processed-ack: queue.resources.processed.ack,queue.resources.processed.ack.dlq
   servlet:
     multipart:
       maxFileSize: -1
