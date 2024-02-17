@@ -10,7 +10,7 @@ import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
 import org.learning.microservices.resource.api.message.ProcessResourceMessage;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.BindingProperties;
-import org.learning.microservices.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.entity.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.service.AwsS3Service;
 import org.learning.microservices.storage.api.domain.StorageResponse;

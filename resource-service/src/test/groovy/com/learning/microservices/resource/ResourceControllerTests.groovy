@@ -2,7 +2,7 @@ package com.learning.microservices.resource
 
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties
 import org.learning.microservices.resource.controller.ResourceController
-import org.learning.microservices.resource.domain.ResourceEntity
+import org.learning.microservices.resource.entity.ResourceEntity
 import org.learning.microservices.resource.repository.ResourceRepository
 import org.learning.microservices.service.AwsS3Service
 import org.springframework.amqp.rabbit.core.RabbitTemplate

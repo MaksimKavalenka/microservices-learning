@@ -2,7 +2,7 @@ package org.learning.microservices.storage.mapper;
 
 import org.learning.microservices.storage.api.domain.StorageRequest;
 import org.learning.microservices.storage.api.domain.StorageResponse;
-import org.learning.microservices.storage.domain.StorageEntity;
+import org.learning.microservices.storage.entity.StorageEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

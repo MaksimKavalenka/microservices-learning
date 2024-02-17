@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("java")
@@ -66,7 +67,7 @@ allprojects {
 
     the<DependencyManagementExtension>().apply {
         imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+            mavenBom(BOM_COORDINATES)
         }
     }
 
@@ -83,7 +84,7 @@ allprojects {
 the<DependencyManagementExtension>().apply {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(BOM_COORDINATES)
     }
 
     dependencies {

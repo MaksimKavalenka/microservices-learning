@@ -1,4 +1,4 @@
-package org.learning.microservices.song.domain;
+package org.learning.microservices.song.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

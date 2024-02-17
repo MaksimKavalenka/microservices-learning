@@ -1,4 +1,4 @@
-package org.learning.microservices.storage.domain;
+package org.learning.microservices.storage.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

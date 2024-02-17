@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("java")
@@ -63,7 +64,7 @@ the<DependencyManagementExtension>().apply {
         mavenBom("org.apache.tika:tika-bom:2.9.0")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom("software.amazon.awssdk:s3:2.22.13")
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(BOM_COORDINATES)
     }
 
     dependencies {

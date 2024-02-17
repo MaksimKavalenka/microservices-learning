@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.learning.microservices.storage.api.domain.StorageRequest;
 import org.learning.microservices.storage.api.domain.StorageResponse;
-import org.learning.microservices.storage.domain.StorageEntity;
+import org.learning.microservices.storage.entity.StorageEntity;
 import org.learning.microservices.storage.mapper.StorageMapper;
 import org.learning.microservices.storage.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Value;
