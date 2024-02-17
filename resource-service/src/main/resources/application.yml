@@ -33,6 +33,10 @@ eureka:
     metadataMap:
       instanceId: ${spring.application.name}:${server.port}
 
+feign:
+  circuitbreaker:
+    enabled: true
+
 flyway:
   database:
     create-if-not-exists: true

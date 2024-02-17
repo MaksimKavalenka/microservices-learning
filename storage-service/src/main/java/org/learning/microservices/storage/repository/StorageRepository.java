@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface StorageRepository extends CrudRepository<StorageEntity, Integer> {
 
+    boolean existsByStorageType(String storageType);
+
     @Query("SELECT storage.id FROM StorageEntity storage WHERE storage.id IN (:ids)")
     List<Integer> getExistingIds(List<Integer> ids);
 
