@@ -5,6 +5,7 @@ import org.learning.microservices.resource.controller.ResourceController
 import org.learning.microservices.resource.entity.ResourceEntity
 import org.learning.microservices.resource.repository.ResourceRepository
 import org.learning.microservices.service.AwsS3Service
+import org.learning.microservices.storage.api.domain.StorageResponse
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import spock.lang.Shared
 import spock.lang.Specification
@@ -30,12 +31,29 @@ class ResourceControllerTests extends Specification {
     @Shared
     ResourceController resourceController
 
+    @Shared
+    Map<String, StorageResponse> storages = Map.of(
+            "staging",
+            StorageResponse.builder()
+                    .storageType("staging")
+                    .bucketName("staging")
+                    .path("/files")
+                    .build(),
+
+            "permanent",
+            StorageResponse.builder()
+                    .storageType("permanent")
+                    .bucketName("permanent")
+                    .path("/files")
+                    .build())
+
     def setup() {
         awsS3Service = mock(AwsS3Service.class)
         rabbitBindingProperties = mock(RabbitBindingProperties.class)
         rabbitTemplate = mock(RabbitTemplate.class)
         resourceRepository = mock(ResourceRepository.class)
-        resourceController = new ResourceController(awsS3Service, rabbitBindingProperties, rabbitTemplate, resourceRepository)
+        resourceController = new ResourceController(
+                awsS3Service, rabbitBindingProperties, rabbitTemplate, resourceRepository, storages)
         resourceController.deletionLimit = 200
     }
 
@@ -56,7 +74,7 @@ class ResourceControllerTests extends Specification {
         bindingProperties.setRoutingKey('test')
 
         when:
-        doNothing().when(awsS3Service).putObject(anyString(), any())
+        doNothing().when(awsS3Service).putObject(anyString(), matches("staging"), any())
         when(resourceRepository.save(any())).thenReturn(entity)
         when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(PROCESS_BINDING_KEY, bindingProperties))
         doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
@@ -68,7 +86,7 @@ class ResourceControllerTests extends Specification {
         response.get('id') == 1
 
         and:
-        verify(awsS3Service, times(1)).putObject(anyString(), any()) || true
+        verify(awsS3Service, times(1)).putObject(anyString(), matches("staging"), any()) || true
         verify(resourceRepository, times(1)).save(any()) || true
         verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
     }
@@ -86,7 +104,7 @@ class ResourceControllerTests extends Specification {
 
         when:
         when(resourceRepository.findById(1)).thenReturn(Optional.of(entity))
-        when(awsS3Service.getObjectBytes(entity.getS3Key())).thenReturn(file.getBytes())
+        when(awsS3Service.getObjectBytes(entity.getS3Key(), "permanent")).thenReturn(file.getBytes())
 
         and:
         byte[] content = resourceController.getResource(1)
@@ -96,7 +114,7 @@ class ResourceControllerTests extends Specification {
 
         and:
         verify(resourceRepository, times(1)).findById(entity.getId()) || true
-        verify(awsS3Service, times(1)).getObjectBytes(entity.getS3Key()) || true
+        verify(awsS3Service, times(1)).getObjectBytes(entity.getS3Key(), "permanent") || true
     }
 
     def 'Resource controller deletes a content'() {
@@ -111,7 +129,7 @@ class ResourceControllerTests extends Specification {
 
         when:
         when(resourceRepository.getS3Keys(ids)).thenReturn(s3Keys)
-        doNothing().when(awsS3Service).deleteObjects(s3Keys)
+        doNothing().when(awsS3Service).deleteObjects(s3Keys, "permanent")
         doNothing().when(resourceRepository).deleteAllById(ids)
         when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(DELETE_BINDING_KEY, bindingProperties))
         doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
@@ -124,7 +142,7 @@ class ResourceControllerTests extends Specification {
 
         and:
         verify(resourceRepository, times(1)).getS3Keys(ids) || true
-        verify(awsS3Service, times(1)).deleteObjects(s3Keys) || true
+        verify(awsS3Service, times(1)).deleteObjects(s3Keys, "permanent") || true
         verify(resourceRepository, times(1)).deleteAllById(ids) || true
         verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
     }
@@ -146,7 +164,7 @@ class ResourceControllerTests extends Specification {
 
         and:
         verify(resourceRepository, never()).getS3Keys(anyList()) || true
-        verify(awsS3Service, never()).deleteObjects(anyList()) || true
+        verify(awsS3Service, never()).deleteObjects(anyList(), matches("permanent")) || true
         verify(resourceRepository, never()).deleteAllById(anyList()) || true
         verify(rabbitTemplate, never()).convertAndSend(anyString(), anyString(), any()) || true
     }
