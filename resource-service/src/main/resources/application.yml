@@ -33,10 +33,6 @@ eureka:
     metadataMap:
       instanceId: ${spring.application.name}:${server.port}
 
-feign:
-  circuitbreaker:
-    enabled: true
-
 flyway:
   database:
     create-if-not-exists: true
@@ -59,6 +55,10 @@ server:
 spring:
   application:
     name: resource-service
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
   config:
     discovery:
       enabled: true
