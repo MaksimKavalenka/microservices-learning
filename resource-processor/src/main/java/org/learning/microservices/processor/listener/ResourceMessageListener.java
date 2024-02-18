@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
-import org.learning.microservices.processor.client.SongServiceFeignClient;
 import org.learning.microservices.processor.configuration.properties.RabbitBindingProperties;
 import org.learning.microservices.processor.configuration.properties.RabbitBindingProperties.BindingProperties;
 import org.learning.microservices.processor.exception.MessageProcessingException;
@@ -15,6 +14,7 @@ import org.learning.microservices.resource.api.message.ProcessResourceMessage;
 import org.learning.microservices.resource.api.message.ResourceProcessedAckMessage;
 import org.learning.microservices.service.AwsS3Service;
 import org.learning.microservices.song.api.domain.SongRequest;
+import org.learning.microservices.song.api.service.SongService;
 import org.learning.microservices.storage.api.domain.StorageResponse;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -35,7 +35,7 @@ public class ResourceMessageListener {
 
     private final AwsS3Service awsS3Service;
 
-    private final SongServiceFeignClient songService;
+    private final SongService songService;
 
     private final RabbitBindingProperties rabbitBindingProperties;
 

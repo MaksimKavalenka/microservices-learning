@@ -84,8 +84,10 @@ spring:
       delete:
         source: topic.resources
         routing-key: DOMAIN.RESOURCE.DELETE
-    queues:
-      processed-ack: queue.resources.processed.ack,queue.resources.processed.ack.dlq
+    listener:
+      enabled: true
+      queues:
+        processed-ack: queue.resources.processed.ack,queue.resources.processed.ack.dlq
   servlet:
     multipart:
       maxFileSize: -1

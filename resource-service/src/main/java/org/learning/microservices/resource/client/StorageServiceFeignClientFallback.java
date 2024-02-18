@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.learning.microservices.storage.api.domain.StorageRequest;
 import org.learning.microservices.storage.api.domain.StorageResponse;
+import org.learning.microservices.storage.api.service.StorageService;
 import org.springframework.cloud.client.circuitbreaker.NoFallbackAvailableException;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class StorageServiceFeignClientFallback implements StorageServiceFeignClient {
+public class StorageServiceFeignClientFallback implements StorageService {
 
     @Override
     public Map<String, Object> createStorage(StorageRequest storageRequest) {
@@ -38,7 +39,7 @@ public class StorageServiceFeignClientFallback implements StorageServiceFeignCli
     }
 
     @Override
-    public Map<String, Object> deleteStorage(@NotBlank String s) {
+    public Map<String, Object> deleteStorage(@NotBlank String id) {
         throw new NoFallbackAvailableException("Not supported", new UnsupportedOperationException());
     }
 
