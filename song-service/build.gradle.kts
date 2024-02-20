@@ -17,6 +17,7 @@ configurations {
     }
 }
 
+
 allprojects {
     apply {
         plugin("groovy")
@@ -28,7 +29,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
 
         maven {
             name = "GitHubPackages"

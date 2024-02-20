@@ -20,7 +20,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 
     maven {
         name = "GitHubPackages"
