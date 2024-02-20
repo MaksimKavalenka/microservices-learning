@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   gateway:
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4819066+03:00"
+    created: "2024-02-20T20:55:25.9820504+03:00"
     digest: dd43355af6e6cdb3c8540512fed55d9700823ab94c3dc5d05cec9a031e44c6a7
     name: gateway
     urls:
@@ -10,7 +10,14 @@ entries:
     version: 1.0.0
   resource-processor:
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4819066+03:00"
+    created: "2024-02-20T20:55:25.9830501+03:00"
+    digest: 6d006914ca904cea06512906ecc196edbe25647238356e5be06afffa4be5c9df
+    name: resource-processor
+    urls:
+    - charts/resource-processor/resource-processor-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    created: "2024-02-20T20:55:25.9830501+03:00"
     digest: ed1e105d9a793b6b420b0ac57e0999cceaafbe52fa6337d53fe6317e375f643c
     name: resource-processor
     urls:
@@ -18,28 +25,35 @@ entries:
     version: 1.0.0
   resource-service:
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4829061+03:00"
+    created: "2024-02-20T20:55:25.98605+03:00"
+    digest: 9ea73798657b4b185b0abf5f59b0e3c58dd71505814b587521202e850f577826
+    name: resource-service
+    urls:
+    - charts/resource-service/resource-service-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
+    created: "2024-02-20T20:55:25.98605+03:00"
     digest: 19b7fc5975d896c1a80cd65e49b4d6eded62f26173a9684284a60edc45a9cc0e
     name: resource-service
     urls:
     - charts/resource-service/resource-service-1.3.0.tgz
     version: 1.3.0
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4829061+03:00"
+    created: "2024-02-20T20:55:25.9850498+03:00"
     digest: d2ae77755fcdb16d2bfdd6b223701fbd0f7e7f58c6c1ec640a8d3e0aa029f894
     name: resource-service
     urls:
     - charts/resource-service/resource-service-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4819066+03:00"
+    created: "2024-02-20T20:55:25.9840499+03:00"
     digest: c67507de2b148877218b1bf598251c652faed04838bcbb2d0cbea0a1dc43eba1
     name: resource-service
     urls:
     - charts/resource-service/resource-service-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4819066+03:00"
+    created: "2024-02-20T20:55:25.9840499+03:00"
     digest: 73f133e77a2f65de370d6da4d775f6032a1f5adb0ea9ae9f9ec2a20bbdf1ea10
     name: resource-service
     urls:
@@ -47,24 +61,32 @@ entries:
     version: 1.0.0
   song-service:
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4829061+03:00"
+    created: "2024-02-20T20:55:25.9879976+03:00"
     digest: e506780b6ac70d9b90433005c23ee614f55ab4696cae9b80635aed8651a7b9ae
     name: song-service
     urls:
     - charts/song-service/song-service-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4829061+03:00"
+    created: "2024-02-20T20:55:25.9874412+03:00"
     digest: 4414d140bd44ea0d1a71339fa409a53d07ad3c3fcd57c14d932ff48493be3772
     name: song-service
     urls:
     - charts/song-service/song-service-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
-    created: "2024-02-11T13:54:17.4829061+03:00"
+    created: "2024-02-20T20:55:25.9868531+03:00"
     digest: 2e414724cdafa1ee777e42d655119674b13a80c06fdfd17dc34b1029e4bbd969
     name: song-service
     urls:
     - charts/song-service/song-service-1.0.0.tgz
     version: 1.0.0
-generated: "2024-02-11T13:54:17.4819066+03:00"
+  storage-service:
+  - apiVersion: v2
+    created: "2024-02-20T20:55:25.9879976+03:00"
+    digest: 45bc7c3198ade87dbfd9d736126e1ba4ce887d85c2254852be0defa5b518c714
+    name: storage-service
+    urls:
+    - charts/storage-service/storage-service-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-02-20T20:55:25.9764335+03:00"
