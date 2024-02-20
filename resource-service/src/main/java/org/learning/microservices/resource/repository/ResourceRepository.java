@@ -1,6 +1,6 @@
 package org.learning.microservices.resource.repository;
 
-import org.learning.microservices.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.entity.ResourceEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

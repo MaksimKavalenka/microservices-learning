@@ -1,4 +1,4 @@
-package org.learning.microservices.resource.domain;
+package org.learning.microservices.resource.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

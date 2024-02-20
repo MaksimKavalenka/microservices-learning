@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("groovy")
@@ -67,7 +68,7 @@ allprojects {
 
     the<DependencyManagementExtension>().apply {
         imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+            mavenBom(BOM_COORDINATES)
         }
     }
 
@@ -85,11 +86,12 @@ the<DependencyManagementExtension>().apply {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom("org.spockframework:spock-bom:2.4-M1-groovy-4.0")
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(BOM_COORDINATES)
     }
 
     dependencies {
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
+        dependency("org.learning.microservices:storage-service-api:1.0.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
@@ -100,6 +102,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.learning.microservices:spring-microservices-starter")
+    implementation("org.learning.microservices:storage-service-api")
 
     implementation("org.postgresql:postgresql")
 
@@ -111,6 +114,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 
     implementation("org.springframework.retry:spring-retry")

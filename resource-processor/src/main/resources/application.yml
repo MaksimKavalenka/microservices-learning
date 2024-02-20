@@ -8,7 +8,7 @@ aws:
     port: 4566
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
-    bucket-name: resources
+    enabled: true
 
 eureka:
   client:
@@ -29,6 +29,11 @@ infrastructure:
     host: ${application.destination.host}
     port: 8080
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
+  storage-service:
+    alias: storage-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.storage-service.host}:${infrastructure.storage-service.port}
 
 retry:
   maxAttempts: 3
@@ -47,6 +52,10 @@ spring:
   rabbitmq:
     host: ${application.destination.host}
     port: 5672
+    bindings:
+      processed-ack:
+        source: topic.resources
+        routing-key: DOMAIN.RESOURCE.PROCESSED.ACK
     queues:
       process: queue.resources.process,queue.resources.process.dlq
       delete: queue.resources.delete,queue.resources.delete.dlq
@@ -93,6 +102,8 @@ aws:
 infrastructure:
   song-service:
     port: 8082
+  storage-service:
+    port: 8085
 
 server:
   port: 8083

@@ -7,6 +7,8 @@ aws:
 infrastructure:
   songService:
     host: song-service
+  storageService:
+    host: storage-service
 
 rabbitmq:
   host: rabbitmq

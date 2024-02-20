@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("java")
@@ -62,13 +63,14 @@ the<DependencyManagementExtension>().apply {
         mavenBom("org.apache.tika:tika-bom:2.9.0")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom("software.amazon.awssdk:s3:2.22.13")
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(BOM_COORDINATES)
     }
 
     dependencies {
-        dependency("org.learning.microservices:resource-service-api:1.1.0")
+        dependency("org.learning.microservices:resource-service-api:1.2.0")
         dependency("org.learning.microservices:song-service-api:1.2.0")
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:storage-service-api:1.0.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
     }
 }
 
@@ -78,6 +80,7 @@ dependencies {
 
     implementation("org.learning.microservices:resource-service-api")
     implementation("org.learning.microservices:song-service-api")
+    implementation("org.learning.microservices:storage-service-api")
     implementation("org.learning.microservices:spring-microservices-starter")
 
     annotationProcessor("org.projectlombok:lombok")

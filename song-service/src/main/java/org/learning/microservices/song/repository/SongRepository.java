@@ -1,6 +1,6 @@
 package org.learning.microservices.song.repository;
 
-import org.learning.microservices.song.domain.SongEntity;
+import org.learning.microservices.song.entity.SongEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

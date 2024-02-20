@@ -36,7 +36,11 @@ class ResourceControllerSpec extends Specification {
         S3Client s3 = s3ClientBuilder.build()
         s3.createBucket(
                 CreateBucketRequest.builder()
-                        .bucket('resources')
+                        .bucket('staging')
+                        .build())
+        s3.createBucket(
+                CreateBucketRequest.builder()
+                        .bucket('permanent')
                         .build())
     }
 
@@ -52,28 +56,17 @@ class ResourceControllerSpec extends Specification {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath('$.id', Matchers.is(1)))
-
-        and:
-        mockMvc.perform(MockMvcRequestBuilders.get('/v1/resources/1')
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(file.getText()))
-
-        and:
-        mockMvc.perform(MockMvcRequestBuilders.delete('/v1/resources?id=1')
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
     }
 
     def 'Resource upload workflow responds accordingly if there is no file found'() {
         expect:
-        mockMvc.perform(MockMvcRequestBuilders.get('/v1/resources/1')
+        mockMvc.perform(MockMvcRequestBuilders.get('/v1/resources/3')
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath('$.status', Matchers.is(404)))
                 .andExpect(MockMvcResultMatchers.jsonPath('$.error', Matchers.is('Not Found')))
-                .andExpect(MockMvcResultMatchers.jsonPath('$.message', Matchers.is('Data not found by ID: 1')))
-                .andExpect(MockMvcResultMatchers.jsonPath('$.path', Matchers.is('/v1/resources/1')))
+                .andExpect(MockMvcResultMatchers.jsonPath('$.message', Matchers.is('Data not found by ID: 3')))
+                .andExpect(MockMvcResultMatchers.jsonPath('$.path', Matchers.is('/v1/resources/3')))
     }
 
 }

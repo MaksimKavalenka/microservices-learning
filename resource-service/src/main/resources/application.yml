@@ -11,7 +11,7 @@ aws:
     port: 4566
     url: http://${aws.destination.host}:${aws.destination.port}
   s3:
-    bucket-name: resources
+    enabled: true
 
 database:
   destination:
@@ -37,6 +37,13 @@ flyway:
   database:
     create-if-not-exists: true
 
+infrastructure:
+  storage-service:
+    alias: storage-service
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.storage-service.host}:${infrastructure.storage-service.port}
+
 retry:
   maxAttempts: 3
 
@@ -48,6 +55,10 @@ server:
 spring:
   application:
     name: resource-service
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
   config:
     discovery:
       enabled: true
@@ -73,6 +84,10 @@ spring:
       delete:
         source: topic.resources
         routing-key: DOMAIN.RESOURCE.DELETE
+    listener:
+      enabled: true
+      queues:
+        processed-ack: queue.resources.processed.ack,queue.resources.processed.ack.dlq
   servlet:
     multipart:
       maxFileSize: -1
@@ -116,6 +131,10 @@ aws:
 database:
   destination:
     port: 5401
+
+infrastructure:
+  storage-service:
+    port: 8085
 
 logging:
   level:

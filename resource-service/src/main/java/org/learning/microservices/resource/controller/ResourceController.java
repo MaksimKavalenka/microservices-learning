@@ -10,9 +10,10 @@ import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
 import org.learning.microservices.resource.api.message.ProcessResourceMessage;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties;
 import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.BindingProperties;
-import org.learning.microservices.resource.domain.ResourceEntity;
+import org.learning.microservices.resource.entity.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.service.AwsS3Service;
+import org.learning.microservices.storage.api.domain.StorageResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
@@ -21,9 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,19 +45,19 @@ public class ResourceController {
 
     private final ResourceRepository repository;
 
+    private final Map<String, StorageResponse> storages;
+
     @Value("${application.deletion.limit:200}")
     private int deletionLimit;
 
     @Retryable
     @PostMapping(consumes = "audio/mpeg")
-    public Map<String, Object> uploadResource(@RequestBody byte[] content) throws IOException {
+    public Map<String, Object> uploadResource(@RequestBody byte[] content) {
         String s3Key = RandomStringUtils.randomAlphanumeric(16);
 
         // Write a resource to S3
-        Path path = Paths.get(s3Key);
-        Files.write(path, content);
-        awsS3Service.putObject(s3Key, path);
-        Files.delete(path);
+        StorageResponse stagingStorage = storages.get("staging");
+        awsS3Service.putObject(s3Key, stagingStorage.getBucketName(), content);
 
         // Save a resource in DB
         ResourceEntity resource = ResourceEntity.builder().s3Key(s3Key).build();
@@ -84,7 +82,8 @@ public class ResourceController {
                 .map(ResourceEntity::getS3Key)
                 .map(s3Key -> {
                     try {
-                        return awsS3Service.getObjectBytes(s3Key);
+                        StorageResponse permanentStorage = storages.get("permanent");
+                        return awsS3Service.getObjectBytes(s3Key, permanentStorage.getBucketName());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -107,7 +106,8 @@ public class ResourceController {
 
         // Delete resources from S3
         List<String> s3Keys = repository.getS3Keys(ids);
-        awsS3Service.deleteObjects(s3Keys);
+        StorageResponse permanentStorage = storages.get("permanent");
+        awsS3Service.deleteObjects(s3Keys, permanentStorage.getBucketName());
 
         // Delete resources from DB
         repository.deleteAllById(ids);

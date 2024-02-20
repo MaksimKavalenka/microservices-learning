@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("groovy")
@@ -15,6 +16,7 @@ configurations {
         it.get().outgoing.artifact(tasks.bootJar)
     }
 }
+
 
 allprojects {
     apply {
@@ -67,7 +69,7 @@ allprojects {
 
     the<DependencyManagementExtension>().apply {
         imports {
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+            mavenBom(BOM_COORDINATES)
         }
     }
 
@@ -85,7 +87,7 @@ the<DependencyManagementExtension>().apply {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom("org.spockframework:spock-bom:2.4-M1-groovy-4.0")
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(BOM_COORDINATES)
     }
 
     dependencies {
@@ -94,7 +96,7 @@ the<DependencyManagementExtension>().apply {
             entry("mapstruct-processor")
         }
 
-        dependency("org.learning.microservices:spring-microservices-starter:1.1.0")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
     }
 }
 

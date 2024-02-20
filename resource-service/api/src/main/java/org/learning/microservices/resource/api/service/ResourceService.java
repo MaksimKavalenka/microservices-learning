@@ -15,5 +15,4 @@ public interface ResourceService {
     @DeleteMapping("/api/v1/resources")
     Map<String, Object> deleteResources(@RequestParam("id") String id);
 
-
 }

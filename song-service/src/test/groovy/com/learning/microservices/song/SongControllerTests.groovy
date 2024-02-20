@@ -3,7 +3,7 @@ package com.learning.microservices.song
 import org.learning.microservices.song.api.domain.SongRequest
 import org.learning.microservices.song.api.domain.SongResponse
 import org.learning.microservices.song.controller.SongController
-import org.learning.microservices.song.domain.SongEntity
+import org.learning.microservices.song.entity.SongEntity
 import org.learning.microservices.song.mapper.SongMapper
 import org.learning.microservices.song.repository.SongRepository
 import spock.lang.Shared

@@ -16,7 +16,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.Path
 
 @SpringBootTest(classes = ResourceServiceApplication.class)
 @ActiveProfiles('test')
@@ -36,29 +35,29 @@ class AwsS3ServiceSpec extends Specification {
         S3Client s3 = s3ClientBuilder.build()
         s3.createBucket(
                 CreateBucketRequest.builder()
-                        .bucket('resources')
+                        .bucket('staging')
                         .build())
     }
 
     def 'S3 LocalStack can manage files'() {
         given:
         String s3Key = 'test_file'
+        String bucket = 'staging'
         ClassLoader classLoader = getClass().getClassLoader()
         File file = new File(classLoader.getResource("files/test_integration_file.txt").getFile())
 
         when: 'Save a file into S3'
-        Path path = file.toPath()
-        awsS3Service.putObject(s3Key, path)
+        awsS3Service.putObject(s3Key, bucket, file.getBytes())
 
         and: 'Get its content from S3'
-        byte[] content = awsS3Service.getObjectBytes(s3Key)
+        byte[] content = awsS3Service.getObjectBytes(s3Key, bucket)
 
         then: 'The contents are identical'
         file.getText() == new String(content, StandardCharsets.UTF_8)
 
         when: 'Delete the file and try to get its content'
-        awsS3Service.deleteObjects(Collections.singletonList(s3Key))
-        awsS3Service.getObjectBytes(s3Key)
+        awsS3Service.deleteObjects(Collections.singletonList(s3Key), bucket)
+        awsS3Service.getObjectBytes(s3Key, bucket)
 
         then: 'The exception is thrown'
         thrown NoSuchKeyException

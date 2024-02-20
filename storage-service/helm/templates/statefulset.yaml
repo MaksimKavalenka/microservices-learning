@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-postgres
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ .Release.Name }}-postgres
+spec:
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-postgres
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.database.image.name }}
+        ports:
+        - name: postgres-port
+          containerPort: {{ .Values.database.expose.port }}
+        envFrom:
+        - secretRef:
+            name: {{ .Release.Name }}-postgres-secret
+        startupProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["psql", "-c", "SELECT 1"]
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        volumeMounts:
+          - name: postgres-volume-mount
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-postgres-pvc

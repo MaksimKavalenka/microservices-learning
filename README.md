@@ -21,6 +21,10 @@
 - Application (http://localhost:8082)
 - PostgreSQL (http://localhost:5402)
 
+#### Storage Service
+- Application (http://localhost:8085)
+- PostgreSQL (http://localhost:5405)
+
 ### Dependencies
 
 #### Resource Service API
@@ -33,6 +37,9 @@
 - AWS S3 client.
 - Flyway before and after migration listeners.
 - REST exception handler.
+
+#### Storage Service API
+- Storage Service inbound adapter.
 
 ### Tools
 
@@ -53,6 +60,8 @@
 - [Song Service](https://github.com/MaksimKavalenka/microservices-learning/packages/2043571)
 - [Song Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2043572)
 - [Spring Microservices Starter](https://github.com/MaksimKavalenka/microservices-learning/packages/2043488)
+- [Storage Service](https://github.com/MaksimKavalenka/microservices-learning/packages/2073648)
+- [Storage Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2073649)
 
 ### Docker Images
 - [Eureka Server](https://hub.docker.com/r/maksimkavalenka/microservices-learning.eureka-server)
@@ -60,6 +69,7 @@
 - [Resource Processor](https://hub.docker.com/r/maksimkavalenka/microservices-learning.resource-processor)
 - [Resource Service](https://hub.docker.com/r/maksimkavalenka/microservices-learning.resource-service)
 - [Song Service](https://hub.docker.com/r/maksimkavalenka/microservices-learning.song-service)
+- [Storage Service](https://hub.docker.com/r/maksimkavalenka/microservices-learning.storage-service)
 
 ### Helm Charts
 
@@ -80,6 +90,7 @@ helm repo update
 ```
 helm install localstack localstack/localstack -f ./tools/localstack/values.yaml
 helm install rabbitmq bitnami/rabbitmq -f ./tools/rabbitmq/values.yaml
+helm install storage-service microservices-learning/storage-service
 helm install song-service microservices-learning/song-service
 helm install resource-service microservices-learning/resource-service
 helm install resource-processor microservices-learning/resource-processor

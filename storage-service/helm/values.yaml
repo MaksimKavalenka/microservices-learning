@@ -1,0 +1,23 @@
+aws:
+  destination:
+    host: localstack
+
+database:
+  expose:
+    port: 5432
+  image:
+    name: postgres
+  resources:
+    requests:
+      storage: 1Gi
+
+service:
+  expose:
+    port: 8080
+    api:
+      health: /api/actuator/health
+  image:
+    name: maksimkavalenka/microservices-learning.storage-service
+    tag: latest
+  deployment:
+    replicas: 2
