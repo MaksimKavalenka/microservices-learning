@@ -75,6 +75,8 @@ the<DependencyManagementExtension>().apply {
 }
 
 dependencies {
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
     implementation("org.apache.tika:tika-core")
     implementation("org.apache.tika:tika-parsers-standard-package")
 

@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus
+    restart: on-failure
+    ports:
+      - "${PROMETHEUS_PORT}:9090"
+    volumes:
+      - ./tools/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

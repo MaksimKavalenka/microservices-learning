@@ -27,6 +27,21 @@ infrastructure:
     port: 8080
     url: http://${infrastructure.song-service.host}:${infrastructure.song-service.port}
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 retry:
   maxAttempts: 3
 

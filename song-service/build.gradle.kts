@@ -103,15 +103,14 @@ the<DependencyManagementExtension>().apply {
 dependencies {
     implementation(project(":song-service-api"))
 
+    implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.flywaydb:flyway-core")
-
     implementation("org.learning.microservices:spring-microservices-starter")
 
     implementation("org.mapstruct:mapstruct")
     annotationProcessor("org.mapstruct:mapstruct-processor")
 
     implementation("org.postgresql:postgresql")
-
     implementation("org.slf4j:slf4j-api")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")

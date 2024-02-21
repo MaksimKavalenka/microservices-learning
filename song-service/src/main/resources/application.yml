@@ -28,6 +28,21 @@ flyway:
   database:
     create-if-not-exists: true
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 server:
   port: 8080
   servlet:
