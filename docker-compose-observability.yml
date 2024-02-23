@@ -2,29 +2,16 @@ version: '3.8'
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+    ports:
+      - "9200:9200"
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "discovery.type=single-node"
       - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.3.3
-    ports:
-      - "5601:5601"
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
-    depends_on:
-      - elasticsearch
   logstash:
     image: docker.elastic.co/logstash/logstash:8.3.3
-    volumes:
-      - ./configs/elk/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./configs/elk/pipeline:/usr/share/logstash/pipeline:ro
+    restart: on-failure
     ports:
       - "5044:5044"
       - "5000:5000/tcp"
@@ -32,8 +19,32 @@ services:
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    volumes:
+      - ./configs/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./configs/logstash/pipeline:/usr/share/logstash/pipeline:ro
     depends_on:
       - elasticsearch
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.3.3
+    restart: on-failure
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.3.3
+    restart: on-failure
+    entrypoint: "filebeat -e -strict.perms=false"
+    user: root
+    volumes:
+      - ./configs/filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - logstash
   prometheus:
     image: prom/prometheus
     restart: on-failure
@@ -41,6 +52,3 @@ services:
       - "${PROMETHEUS_PORT}:9090"
     volumes:
       - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-volumes:
-  elasticsearch_data:
-      driver: local
