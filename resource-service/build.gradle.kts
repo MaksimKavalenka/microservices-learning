@@ -90,6 +90,7 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
+        dependency("net.logstash.logback:logstash-logback-encoder:7.4")
         dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
         dependency("org.learning.microservices:storage-service-api:1.0.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
@@ -100,6 +101,7 @@ dependencies {
     implementation(project(":resource-service-api"))
 
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("net.logstash.logback:logstash-logback-encoder")
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.learning.microservices:spring-microservices-starter")

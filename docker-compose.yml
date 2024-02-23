@@ -16,8 +16,8 @@ services:
       - "${RABBITMQ_PORT}:5672"
       - "${RABBITMQ_PORT_UI}:15672"
     volumes:
-      - ./tools/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./tools/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./configs/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
   eureka-server:
     build: eureka-server
     image: maksimkavalenka/eureka-server:local

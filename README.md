@@ -88,8 +88,8 @@ helm repo update
 ### Helm
 
 ```
-helm install localstack localstack/localstack -f ./tools/localstack/values.yaml
-helm install rabbitmq bitnami/rabbitmq -f ./tools/rabbitmq/values.yaml
+helm install localstack localstack/localstack -f ./configs/localstack/values.yaml
+helm install rabbitmq bitnami/rabbitmq -f ./configs/rabbitmq/values.yaml
 helm install storage-service microservices-learning/storage-service
 helm install song-service microservices-learning/song-service
 helm install resource-service microservices-learning/resource-service

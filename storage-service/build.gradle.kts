@@ -87,11 +87,13 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
-        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
         dependencySet("org.mapstruct:1.5.5.Final") {
             entry("mapstruct")
             entry("mapstruct-processor")
         }
+
+        dependency("net.logstash.logback:logstash-logback-encoder:7.4")
+        dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
     }
 }
@@ -100,6 +102,7 @@ dependencies {
     implementation(project(":storage-service-api"))
 
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("net.logstash.logback:logstash-logback-encoder")
     implementation("org.flywaydb:flyway-core")
     implementation("org.learning.microservices:spring-microservices-starter")
 
