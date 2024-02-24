@@ -8,14 +8,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.learning.microservices.exception.DataNotFoundException;
 import org.learning.microservices.resource.api.message.DeleteResourcesMessage;
 import org.learning.microservices.resource.api.message.ProcessResourceMessage;
-import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties;
-import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.BindingProperties;
 import org.learning.microservices.resource.entity.ResourceEntity;
 import org.learning.microservices.resource.repository.ResourceRepository;
 import org.learning.microservices.service.AwsS3Service;
 import org.learning.microservices.storage.api.domain.StorageResponse;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -25,9 +23,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.DELETE_BINDING_KEY;
-import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.PROCESS_BINDING_KEY;
 
 @RestController
 @RequestMapping("/v1/resources")
@@ -39,9 +34,7 @@ public class ResourceController {
 
     private final AwsS3Service awsS3Service;
 
-    private final RabbitBindingProperties rabbitBindingProperties;
-
-    private final RabbitTemplate rabbitTemplate;
+    private final StreamBridge streamBridge;
 
     private final ResourceRepository repository;
 
@@ -69,8 +62,7 @@ public class ResourceController {
                 .s3Key(s3Key)
                 .build();
 
-        BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(PROCESS_BINDING_KEY);
-        rabbitTemplate.convertAndSend(bindingProperties.getSource(), bindingProperties.getRoutingKey(), message);
+        streamBridge.send("resourceProcessChannel", message);
         log.info("The message is sent: {}", message);
 
         return Map.of("id", resource.getId());
@@ -117,8 +109,7 @@ public class ResourceController {
                 .ids(id)
                 .build();
 
-        BindingProperties bindingProperties = rabbitBindingProperties.getBindings().get(DELETE_BINDING_KEY);
-        rabbitTemplate.convertAndSend(bindingProperties.getSource(), bindingProperties.getRoutingKey(), message);
+        streamBridge.send("resourceDeletionChannel", message);
         log.info("The message is sent: {}", message);
 
         return Map.of("ids", ids);

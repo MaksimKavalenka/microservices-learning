@@ -49,6 +49,11 @@ services:
     image: prom/prometheus
     restart: on-failure
     ports:
-      - "${PROMETHEUS_PORT}:9090"
+      - "9090:9090"
     volumes:
       - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  zipkin:
+    image: openzipkin/zipkin
+    restart: on-failure
+    ports:
+      - "9411:9411"

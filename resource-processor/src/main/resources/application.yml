@@ -49,6 +49,12 @@ management:
     export:
       prometheus:
         enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${application.destination.host}:9411/api/v2/spans
 
 retry:
   maxAttempts: 3
@@ -61,19 +67,37 @@ server:
 spring:
   application:
     name: resource-processor
+  cloud:
+    function:
+      definition: resourceProcessChannel;resourceDeletionChannel
+    stream:
+      source: resourceProcessedAckChannel
+      bindings:
+        resourceProcessChannel-in-0:
+          destination: topic.resources
+          group: resource-process-channel-group
+        resourceDeletionChannel-in-0:
+          destination: topic.resources
+          group: resource-deletion-channel-group
+        resourceProcessedAckChannel:
+          destination: topic.resources
+      rabbit:
+        bindings:
+          resourceProcessChannel-in-0:
+            consumer:
+              bindingRoutingKey: "DOMAIN.RESOURCE.PROCESS"
+          resourceDeletionChannel-in-0:
+            consumer:
+              bindingRoutingKey: "DOMAIN.RESOURCE.DELETE"
+          resourceProcessedAckChannel:
+            producer:
+              routingKeyExpression: "'DOMAIN.RESOURCE.PROCESSED.ACK'"
   config:
     discovery:
       enabled: true
   rabbitmq:
     host: ${application.destination.host}
     port: 5672
-    bindings:
-      processed-ack:
-        source: topic.resources
-        routing-key: DOMAIN.RESOURCE.PROCESSED.ACK
-    queues:
-      process: queue.resources.process,queue.resources.process.dlq
-      delete: queue.resources.delete,queue.resources.delete.dlq
   servlet:
     multipart:
       maxFileSize: -1

@@ -53,11 +53,17 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus
+        include: health,info,prometheus,metrics
   metrics:
     export:
       prometheus:
         enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${application.destination.host}:9411/api/v2/spans
 
 retry:
   maxAttempts: 3
@@ -74,6 +80,29 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: resourceProcessedAckChannel
+    stream:
+      source: resourceProcessChannel;resourceDeletionChannel
+      bindings:
+        resourceProcessedAckChannel-in-0:
+          destination: topic.resources
+          group: resource-processed-ack-channel-group
+        resourceProcessChannel:
+          destination: topic.resources
+        resourceDeletionChannel:
+          destination: topic.resources
+      rabbit:
+        bindings:
+          resourceProcessedAckChannel-in-0:
+            consumer:
+              bindingRoutingKey: "DOMAIN.RESOURCE.PROCESSED.ACK"
+          resourceProcessChannel:
+            producer:
+              routingKeyExpression: "'DOMAIN.RESOURCE.PROCESS'"
+          resourceDeletionChannel:
+            producer:
+              routingKeyExpression: "'DOMAIN.RESOURCE.DELETE'"
   config:
     discovery:
       enabled: true
@@ -92,17 +121,6 @@ spring:
   rabbitmq:
     host: ${application.destination.host}
     port: 5672
-    bindings:
-      process:
-        source: topic.resources
-        routing-key: DOMAIN.RESOURCE.PROCESS
-      delete:
-        source: topic.resources
-        routing-key: DOMAIN.RESOURCE.DELETE
-    listener:
-      enabled: true
-      queues:
-        processed-ack: queue.resources.processed.ack,queue.resources.processed.ack.dlq
   servlet:
     multipart:
       maxFileSize: -1
