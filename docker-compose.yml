@@ -16,8 +16,8 @@ services:
       - "${RABBITMQ_PORT}:5672"
       - "${RABBITMQ_PORT_UI}:15672"
     volumes:
-      - ./tools/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./tools/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./configs/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
   eureka-server:
     build: eureka-server
     image: maksimkavalenka/eureka-server:local
@@ -47,6 +47,9 @@ services:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
       - "${STORAGE_SERVICE_APPLICATION_PORT}:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     depends_on:
       - eureka-server
       - localstack
@@ -71,6 +74,9 @@ services:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
     ports:
       - "${SONG_SERVICE_APPLICATION_PORT}:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     depends_on:
       - eureka-server
       - song-service-postgres
@@ -102,6 +108,9 @@ services:
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     ports:
       - "${RESOURCE_SERVICE_APPLICATION_PORT}:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     depends_on:
       - eureka-server
       - localstack
@@ -127,6 +136,9 @@ services:
       SPRING_RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     ports:
       - "${RESOURCE_PROCESSOR_APPLICATION_PORT}:8080"
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
     depends_on:
       - eureka-server
       - localstack

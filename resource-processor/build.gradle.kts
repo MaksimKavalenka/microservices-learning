@@ -67,6 +67,7 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
+        dependency("net.logstash.logback:logstash-logback-encoder:7.4")
         dependency("org.learning.microservices:resource-service-api:1.2.0")
         dependency("org.learning.microservices:song-service-api:1.2.0")
         dependency("org.learning.microservices:storage-service-api:1.0.0")
@@ -75,6 +76,13 @@ the<DependencyManagementExtension>().apply {
 }
 
 dependencies {
+    implementation("io.github.openfeign:feign-micrometer")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.micrometer:micrometer-tracing-bridge-brave")
+    implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+
+    implementation("net.logstash.logback:logstash-logback-encoder")
+
     implementation("org.apache.tika:tika-core")
     implementation("org.apache.tika:tika-parsers-standard-package")
 

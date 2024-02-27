@@ -90,6 +90,7 @@ the<DependencyManagementExtension>().apply {
     }
 
     dependencies {
+        dependency("net.logstash.logback:logstash-logback-encoder:7.4")
         dependency("org.learning.microservices:spring-microservices-starter:1.2.0")
         dependency("org.learning.microservices:storage-service-api:1.0.0")
         dependency("software.amazon.awssdk:s3:2.22.13")
@@ -99,13 +100,18 @@ the<DependencyManagementExtension>().apply {
 dependencies {
     implementation(project(":resource-service-api"))
 
+    implementation("io.github.openfeign:feign-micrometer")
+    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.micrometer:micrometer-tracing-bridge-brave")
+    implementation("io.zipkin.reporter2:zipkin-reporter-brave")
+
+    implementation("net.logstash.logback:logstash-logback-encoder")
     implementation("org.flywaydb:flyway-core")
 
     implementation("org.learning.microservices:spring-microservices-starter")
     implementation("org.learning.microservices:storage-service-api")
 
     implementation("org.postgresql:postgresql")
-
     implementation("org.slf4j:slf4j-api")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")

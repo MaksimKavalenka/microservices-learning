@@ -67,10 +67,14 @@ the<DependencyManagementExtension>().apply {
 }
 
 dependencies {
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
 
     implementation("org.slf4j:slf4j-api")
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")

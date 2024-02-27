@@ -28,6 +28,27 @@ flyway:
   database:
     create-if-not-exists: true
 
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${application.destination.host}:9411/api/v2/spans
+
 server:
   port: 8080
   servlet:

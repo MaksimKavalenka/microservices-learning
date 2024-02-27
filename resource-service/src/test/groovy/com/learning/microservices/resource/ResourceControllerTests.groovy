@@ -1,16 +1,14 @@
 package com.learning.microservices.resource
 
-import org.learning.microservices.resource.configuration.properties.RabbitBindingProperties
 import org.learning.microservices.resource.controller.ResourceController
 import org.learning.microservices.resource.entity.ResourceEntity
 import org.learning.microservices.resource.repository.ResourceRepository
 import org.learning.microservices.service.AwsS3Service
 import org.learning.microservices.storage.api.domain.StorageResponse
-import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.cloud.stream.function.StreamBridge
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static org.learning.microservices.resource.configuration.properties.RabbitBindingProperties.*
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 
@@ -20,10 +18,7 @@ class ResourceControllerTests extends Specification {
     AwsS3Service awsS3Service
 
     @Shared
-    RabbitBindingProperties rabbitBindingProperties
-
-    @Shared
-    RabbitTemplate rabbitTemplate
+    StreamBridge streamBridge
 
     @Shared
     ResourceRepository resourceRepository
@@ -49,11 +44,10 @@ class ResourceControllerTests extends Specification {
 
     def setup() {
         awsS3Service = mock(AwsS3Service.class)
-        rabbitBindingProperties = mock(RabbitBindingProperties.class)
-        rabbitTemplate = mock(RabbitTemplate.class)
+        streamBridge = mock(StreamBridge.class)
         resourceRepository = mock(ResourceRepository.class)
         resourceController = new ResourceController(
-                awsS3Service, rabbitBindingProperties, rabbitTemplate, resourceRepository, storages)
+                awsS3Service, streamBridge, resourceRepository, storages)
         resourceController.deletionLimit = 200
     }
 
@@ -68,16 +62,10 @@ class ResourceControllerTests extends Specification {
         ClassLoader classLoader = getClass().getClassLoader()
         File file = new File(classLoader.getResource("files/test_file.txt").getFile())
 
-        and:
-        BindingProperties bindingProperties = new BindingProperties()
-        bindingProperties.setSource('test')
-        bindingProperties.setRoutingKey('test')
-
         when:
         doNothing().when(awsS3Service).putObject(anyString(), matches("staging"), any())
         when(resourceRepository.save(any())).thenReturn(entity)
-        when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(PROCESS_BINDING_KEY, bindingProperties))
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
+        when(streamBridge.send(eq("resourceProcessChannel"), any())).thenReturn(true)
 
         and:
         Map<String, Object> response = resourceController.uploadResource(file.getBytes())
@@ -88,7 +76,7 @@ class ResourceControllerTests extends Specification {
         and:
         verify(awsS3Service, times(1)).putObject(anyString(), matches("staging"), any()) || true
         verify(resourceRepository, times(1)).save(any()) || true
-        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
+        verify(streamBridge, times(1)).send(eq("resourceProcessChannel"), any()) || true
     }
 
     def 'Resource controller returns a content'() {
@@ -122,17 +110,11 @@ class ResourceControllerTests extends Specification {
         List<Integer> ids = [1, 2, 3]
         List<String> s3Keys = ['key1', 'key2', 'key3']
 
-        and:
-        BindingProperties bindingProperties = new BindingProperties()
-        bindingProperties.setSource('test')
-        bindingProperties.setRoutingKey('test')
-
         when:
         when(resourceRepository.getS3Keys(ids)).thenReturn(s3Keys)
         doNothing().when(awsS3Service).deleteObjects(s3Keys, "permanent")
         doNothing().when(resourceRepository).deleteAllById(ids)
-        when(rabbitBindingProperties.getBindings()).thenReturn(Map.of(DELETE_BINDING_KEY, bindingProperties))
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(), anyString(), any())
+        when(streamBridge.send(eq("resourceDeletionChannel"), any())).thenReturn(true)
 
         and:
         Map<String, Object> response = resourceController.deleteResources('1,2,3')
@@ -144,17 +126,12 @@ class ResourceControllerTests extends Specification {
         verify(resourceRepository, times(1)).getS3Keys(ids) || true
         verify(awsS3Service, times(1)).deleteObjects(s3Keys, "permanent") || true
         verify(resourceRepository, times(1)).deleteAllById(ids) || true
-        verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), any()) || true
+        verify(streamBridge, times(1)).send(eq("resourceDeletionChannel"), any()) || true
     }
 
     def 'Resource controller throws the exception when exceeding the deletion limit'() {
         given:
         resourceController.deletionLimit = 1
-
-        and:
-        BindingProperties bindingProperties = new BindingProperties()
-        bindingProperties.setSource('test')
-        bindingProperties.setRoutingKey('test')
 
         when:
         resourceController.deleteResources('1,2,3')
@@ -166,7 +143,7 @@ class ResourceControllerTests extends Specification {
         verify(resourceRepository, never()).getS3Keys(anyList()) || true
         verify(awsS3Service, never()).deleteObjects(anyList(), matches("permanent")) || true
         verify(resourceRepository, never()).deleteAllById(anyList()) || true
-        verify(rabbitTemplate, never()).convertAndSend(anyString(), anyString(), any()) || true
+        verify(streamBridge, never()).send(eq("resourceDeletionChannel"), any()) || true
     }
 
 }
