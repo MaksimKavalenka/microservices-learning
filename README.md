@@ -49,6 +49,17 @@
 #### RabbitMQ
 - Application (http://localhost:5672)
 
+### Observability
+
+#### Kibana
+- Application (http://localhost:5601)
+
+#### Prometheus
+- Application (http://localhost:9090)
+
+#### Zipkin
+- Application (http://localhost:9411)
+
 ## Binaries
 
 ### Artifacts
@@ -99,5 +110,10 @@ helm install gateway microservices-learning/gateway
 
 ### Docker
 ```
-docker-compose -f .\docker-compose.yml up -d
+docker-compose up -d
+```
+
+#### Observability
+```
+docker-compose -f .\docker-compose-observability.yml up -d
 ```
