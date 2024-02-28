@@ -1,0 +1,79 @@
+application:
+  destination:
+    host: localhost
+
+eureka:
+  client:
+    enabled: false
+    serviceUrl:
+      defaultZone: http://${eureka.destination.host}:${eureka.destination.port}/eureka/
+  destination:
+    host: ${application.destination.host}
+    port: 8761
+  instance:
+    appname: ${spring.application.name}
+    metadataMap:
+      instanceId: ${spring.application.name}:${server.port}
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: authorization-server
+  config:
+    discovery:
+      enabled: true
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://auth-server:${server.port}
+        client:
+          articles-client:
+            registration:
+              client-id: resource-service
+              client-secret: "resource-service-secret"
+              client-name: Resource Service
+              client-authentication-methods:
+                - client_secret_basic
+              authorization-grant-types:
+                - client_credentials
+                - password
+
+---
+
+# docker
+
+application:
+  destination:
+    host: host.docker.internal
+
+spring:
+  config:
+    activate:
+      on-profile: "docker"
+
+---
+
+# eureka
+
+eureka:
+  client:
+    enabled: true
+
+spring:
+  config:
+    activate:
+      on-profile: "eureka"
+
+---
+
+# development
+
+server:
+  port: 8090
+
+spring:
+  config:
+    activate:
+      on-profile: "development"
