@@ -36,6 +36,13 @@ flyway:
   database:
     create-if-not-exists: true
 
+infrastructure:
+  authentication-server:
+    alias: authentication-server
+    host: ${application.destination.host}
+    port: 8080
+    url: http://${infrastructure.authentication-server.host}:${infrastructure.authentication-server.port}
+
 management:
   endpoint:
     metrics:
@@ -87,7 +94,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://auth-server:8080
+          issuer-uri: ${infrastructure.authentication-server.url}
   servlet:
     multipart:
       maxFileSize: -1
@@ -155,8 +162,3 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://auth-server:8090

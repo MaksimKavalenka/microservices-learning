@@ -23,6 +23,17 @@ services:
     restart: on-failure
     ports:
       - "${EUREKA_PORT}:8761"
+  authorization-server:
+    build: authorization-server
+    image: maksimkavalenka/authorization-server:local
+    restart: on-failure
+    environment:
+      SPRING_APPLICATION_NAME: ${AUTHORIZATION_SERVER_APPLICATION_NAME}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    ports:
+      - "${AUTHORIZATION_SERVER_APPLICATION_PORT}:8080"
+    depends_on:
+      - eureka-server
   storage-service-postgres:
     image: postgres
     restart: on-failure
@@ -40,6 +51,8 @@ services:
       AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
       AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
       DATABASE_DESTINATION_PORT: ${STORAGE_SERVICE_DATABASE_PORT}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_ALIAS: ${AUTHORIZATION_SERVER_APPLICATION_NAME}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_PORT: ${AUTHORIZATION_SERVER_APPLICATION_PORT}
       SPRING_APPLICATION_NAME: ${STORAGE_SERVICE_APPLICATION_NAME}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
@@ -53,6 +66,7 @@ services:
       - eureka-server
       - localstack
       - storage-service-postgres
+      - authorization-server
   song-service-postgres:
     image: postgres
     restart: on-failure
@@ -96,6 +110,8 @@ services:
       AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
       AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
       DATABASE_DESTINATION_PORT: ${RESOURCE_SERVICE_DATABASE_PORT}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_ALIAS: ${AUTHORIZATION_SERVER_APPLICATION_NAME}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_PORT: ${AUTHORIZATION_SERVER_APPLICATION_PORT}
       INFRASTRUCTURE_STORAGESERVICE_ALIAS: ${STORAGE_SERVICE_APPLICATION_NAME}
       INFRASTRUCTURE_STORAGESERVICE_PORT: ${STORAGE_SERVICE_APPLICATION_PORT}
       SPRING_APPLICATION_NAME: ${RESOURCE_SERVICE_APPLICATION_NAME}
@@ -115,6 +131,7 @@ services:
       - localstack
       - rabbitmq
       - resource-service-postgres
+      - authorization-server
       - storage-service
   resource-processor:
     build: resource-processor
@@ -124,6 +141,8 @@ services:
       AWS_DESTINATION_PORT: ${LOCALSTACK_PORT}
       AWS_AUTH_ACCESSKEYID: ${AWS_ACCESS_KEY_ID}
       AWS_AUTH_SECRETACCESSKEY: ${AWS_SECRET_ACCESS_KEY}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_ALIAS: ${AUTHORIZATION_SERVER_APPLICATION_NAME}
+      INFRASTRUCTURE_AUTHORIZATIONSERVER_PORT: ${AUTHORIZATION_SERVER_APPLICATION_PORT}
       INFRASTRUCTURE_SONGSERVICE_ALIAS: ${SONG_SERVICE_APPLICATION_NAME}
       INFRASTRUCTURE_SONGSERVICE_PORT: ${SONG_SERVICE_APPLICATION_PORT}
       INFRASTRUCTURE_STORAGESERVICE_ALIAS: ${STORAGE_SERVICE_APPLICATION_NAME}
@@ -142,6 +161,7 @@ services:
       - eureka-server
       - localstack
       - rabbitmq
+      - authorization-server
       - song-service
       - storage-service
   gateway:
