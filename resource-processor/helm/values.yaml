@@ -5,6 +5,8 @@ aws:
     bucketName: resources
 
 infrastructure:
+  authorizationServer:
+    host: authorization-server
   songService:
     host: song-service
   storageService:

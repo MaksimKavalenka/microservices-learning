@@ -8,4 +8,5 @@ data:
   AWS_DESTINATION_HOST: {{ .Values.aws.destination.host }}.{{ .Release.Namespace }}
   AWS_S3_BUCKETNAME: {{ .Values.aws.s3.bucketName }}
   DATABASE_DESTINATION_HOST: {{ .Release.Name }}-postgres.{{ .Release.Namespace }}
+  INFRASTRUCTURE_AUTHORIZATIONSERVER_HOST: {{ .Values.infrastructure.authorizationServer.host }}.{{ .Release.Namespace }}
   SPRING_APPLICATION_NAME: {{ .Release.Name }}

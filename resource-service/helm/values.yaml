@@ -14,6 +14,8 @@ database:
       storage: 1Gi
 
 infrastructure:
+  authorizationServer:
+    host: authorization-server
   storageService:
     host: storage-service
 
