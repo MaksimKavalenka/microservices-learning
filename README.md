@@ -6,6 +6,7 @@ This repository contains packaged Helm charts provided by Maksim Kavalenka.
 `$ helm repo update`
 
 ## Install Packages
+`$ helm install gateway microservices-learning/authorization-server`  
 `$ helm install storage-service microservices-learning/storage-service`  
 `$ helm install song-service microservices-learning/song-service`  
 `$ helm install resource-service microservices-learning/resource-service`  
@@ -17,4 +18,5 @@ This repository contains packaged Helm charts provided by Maksim Kavalenka.
 `$ helm uninstall resource-processor`  
 `$ helm uninstall resource-service`  
 `$ helm uninstall song-service`  
-`$ helm uninstall storage-service`
+`$ helm uninstall storage-service`  
+`$ helm uninstall authorization-server`
