@@ -60,6 +60,7 @@ configure<PublishingExtension> {
 
 the<DependencyManagementExtension>().apply {
     imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         mavenBom(BOM_COORDINATES)
     }
 }
@@ -74,6 +75,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 }
 
 tasks.getByName<Jar>("jar") {

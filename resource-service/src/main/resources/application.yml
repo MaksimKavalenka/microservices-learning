@@ -38,11 +38,11 @@ flyway:
     create-if-not-exists: true
 
 infrastructure:
-  authentication-server:
-    alias: authentication-server
+  authorization-server:
+    alias: authorization-server
     host: ${application.destination.host}
-    port: 8080
-    url: http://${infrastructure.authentication-server.host}:${infrastructure.authentication-server.port}
+    port: 8090
+    url: http://${infrastructure.authorization-server.host}:${infrastructure.authorization-server.port}
   storage-service:
     alias: storage-service
     host: ${application.destination.host}
@@ -137,7 +137,7 @@ spring:
             authorization-grant-type: client_credentials
         provider:
           spring:
-            issuer-uri: ${infrastructure.authentication-server.url}
+            issuer-uri: ${infrastructure.authorization-server.url}
   servlet:
     multipart:
       maxFileSize: -1
@@ -183,6 +183,8 @@ database:
     port: 5401
 
 infrastructure:
+  authorization-server:
+    port: 8090
   storage-service:
     port: 8085
 
