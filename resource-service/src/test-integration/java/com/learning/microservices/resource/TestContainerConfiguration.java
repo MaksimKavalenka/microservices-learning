@@ -7,6 +7,7 @@ import org.learning.microservices.configuration.properties.DatabaseProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.containers.localstack.LocalStackContainer;
@@ -38,6 +39,15 @@ public class TestContainerConfiguration {
                 .withCreateContainerCmdModifier(
                         cmd -> cmd.getHostConfig().withPortBindings(
                                 new PortBinding(Ports.Binding.bindPort(4566), new ExposedPort(4566))));
+    }
+
+    @Bean
+    public GenericContainer<?> authorizationServerContainer() {
+        return new GenericContainer<>("maksimkavalenka/microservices-learning.authorization-server:latest")
+                .withExposedPorts(8090)
+                .withCreateContainerCmdModifier(
+                        cmd -> cmd.getHostConfig().withPortBindings(
+                                new PortBinding(Ports.Binding.bindPort(8090), new ExposedPort(8090))));
     }
 
 }
