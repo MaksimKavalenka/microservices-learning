@@ -1,4 +1,4 @@
-package org.learning.microservices.storage.configuration;
+package org.learning.microservices.storage.component;
 
 import lombok.RequiredArgsConstructor;
 import org.learning.microservices.storage.api.domain.StorageRequest;

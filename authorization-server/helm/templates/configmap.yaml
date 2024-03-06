@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+  namespace: {{ .Release.Namespace }}
+  {{- template "resource-service.labels" . }}
+data:
+  INFRASTRUCTURE_AUTHORIZATIONSERVER_HOST: {{ .Values.infrastructure.authorizationServer.host }}.{{ .Release.Namespace }}
+  SPRING_APPLICATION_NAME: {{ .Release.Name }}

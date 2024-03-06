@@ -38,6 +38,11 @@ flyway:
     create-if-not-exists: true
 
 infrastructure:
+  authorization-server:
+    alias: authorization-server
+    host: ${application.destination.host}
+    port: 8090
+    url: http://${infrastructure.authorization-server.host}:${infrastructure.authorization-server.port}
   storage-service:
     alias: storage-service
     host: ${application.destination.host}
@@ -121,6 +126,18 @@ spring:
   rabbitmq:
     host: ${application.destination.host}
     port: 5672
+  security:
+    oauth2:
+      client:
+        registration:
+          resource-service-client:
+            provider: spring
+            client-id: resource-service
+            client-secret: resource-service-secret
+            authorization-grant-type: client_credentials
+        provider:
+          spring:
+            issuer-uri: ${infrastructure.authorization-server.url}
   servlet:
     multipart:
       maxFileSize: -1
@@ -166,6 +183,8 @@ database:
     port: 5401
 
 infrastructure:
+  authorization-server:
+    port: 8090
   storage-service:
     port: 8085
 

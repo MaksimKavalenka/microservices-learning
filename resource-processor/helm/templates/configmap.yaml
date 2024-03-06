@@ -7,6 +7,7 @@ metadata:
 data:
   AWS_DESTINATION_HOST: {{ .Values.aws.destination.host }}.{{ .Release.Namespace }}
   AWS_S3_BUCKETNAME: {{ .Values.aws.s3.bucketName }}
+  INFRASTRUCTURE_AUTHORIZATIONSERVER_HOST: {{ .Values.infrastructure.authorizationServer.host }}.{{ .Release.Namespace }}
   INFRASTRUCTURE_SONGSERVICE_HOST: {{ .Values.infrastructure.songService.host }}.{{ .Release.Namespace }}
   INFRASTRUCTURE_STORAGESERVICE_HOST: {{ .Values.infrastructure.storageService.host }}.{{ .Release.Namespace }}
   SPRING_APPLICATION_NAME: {{ .Release.Name }}

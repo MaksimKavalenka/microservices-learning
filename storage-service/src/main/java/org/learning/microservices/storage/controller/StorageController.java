@@ -10,6 +10,7 @@ import org.learning.microservices.storage.mapper.StorageMapper;
 import org.learning.microservices.storage.repository.StorageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class StorageController {
 
     @Retryable
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_storages.write')")
     public Map<String, Object> createStorage(@RequestBody StorageRequest storageRequest) {
         StorageEntity storage = mapper.toStorageEntity(storageRequest);
 
@@ -58,6 +60,7 @@ public class StorageController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_storages.read')")
     public List<StorageResponse> getStorages() {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .map(mapper::toStorageResponse)
@@ -66,6 +69,7 @@ public class StorageController {
 
     @Retryable
     @DeleteMapping
+    @PreAuthorize("hasAuthority('SCOPE_storages.write')")
     public Map<String, Object> deleteStorage(@RequestParam("id") @NotBlank String id) {
         List<Integer> ids = Arrays.stream(id.split(","))
                 .map(Integer::valueOf)

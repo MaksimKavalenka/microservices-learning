@@ -4,6 +4,9 @@
 
 ### Services
 
+#### Authorization Server
+- Application (http://localhost:8090)
+
 #### Eureka Server
 - Application (http://localhost:8761)
 
@@ -49,9 +52,21 @@
 #### RabbitMQ
 - Application (http://localhost:5672)
 
+### Observability
+
+#### Kibana
+- Application (http://localhost:5601)
+
+#### Prometheus
+- Application (http://localhost:9090)
+
+#### Zipkin
+- Application (http://localhost:9411)
+
 ## Binaries
 
 ### Artifacts
+- [Authorization Server](https://github.com/MaksimKavalenka/microservices-learning/packages/2085600)
 - [Eureka Server](https://github.com/MaksimKavalenka/microservices-learning/packages/2064895)
 - [Gateway](https://github.com/MaksimKavalenka/microservices-learning/packages/2064892)
 - [Resource Processor](https://github.com/MaksimKavalenka/microservices-learning/packages/2046204)
@@ -64,6 +79,7 @@
 - [Storage Service API](https://github.com/MaksimKavalenka/microservices-learning/packages/2073649)
 
 ### Docker Images
+- [Authorization Server](https://hub.docker.com/r/maksimkavalenka/microservices-learning.authorization-server)
 - [Eureka Server](https://hub.docker.com/r/maksimkavalenka/microservices-learning.eureka-server)
 - [Gateway](https://hub.docker.com/r/maksimkavalenka/microservices-learning.gateway)
 - [Resource Processor](https://hub.docker.com/r/maksimkavalenka/microservices-learning.resource-processor)
@@ -99,5 +115,10 @@ helm install gateway microservices-learning/gateway
 
 ### Docker
 ```
-docker-compose -f .\docker-compose.yml up -d
+docker-compose up -d
+```
+
+#### Observability
+```
+docker-compose -f .\docker-compose-observability.yml up -d
 ```

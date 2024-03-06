@@ -24,6 +24,11 @@ eureka:
       instanceId: ${spring.application.name}:${server.port}
 
 infrastructure:
+  authorization-server:
+    alias: authorization-server
+    host: ${application.destination.host}
+    port: 8090
+    url: http://${infrastructure.authorization-server.host}:${infrastructure.authorization-server.port}
   song-service:
     alias: song-service
     host: ${application.destination.host}
@@ -98,6 +103,19 @@ spring:
   rabbitmq:
     host: ${application.destination.host}
     port: 5672
+  security:
+    oauth2:
+      client:
+        registration:
+          resource-processor-client:
+            provider: spring
+            client-id: resource-processor
+            client-secret: resource-processor-secret
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_basic
+        provider:
+          spring:
+            issuer-uri: ${infrastructure.authorization-server.url}
   servlet:
     multipart:
       maxFileSize: -1
@@ -139,6 +157,8 @@ aws:
     secret-access-key: test
 
 infrastructure:
+  authorization-server:
+    port: 8090
   song-service:
     port: 8082
   storage-service:

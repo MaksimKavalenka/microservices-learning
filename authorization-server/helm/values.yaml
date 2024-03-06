@@ -1,0 +1,14 @@
+infrastructure:
+  authorizationServer:
+    host: authorization-server
+
+service:
+  expose:
+    port: 8080
+    api:
+      health: /actuator/health
+  image:
+    name: maksimkavalenka/microservices-learning.authorization-server
+    tag: latest
+  deployment:
+    replicas: 1

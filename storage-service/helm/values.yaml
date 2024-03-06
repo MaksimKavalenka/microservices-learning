@@ -11,6 +11,10 @@ database:
     requests:
       storage: 1Gi
 
+infrastructure:
+  authorizationServer:
+    host: authorization-server
+
 service:
   expose:
     port: 8080

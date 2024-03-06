@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.service.deployment.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.service.image.name }}:{{ .Values.service.image.tag }}
+        ports:
+        - name: service-port
+          containerPort: {{ .Values.service.expose.port }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-configmap
+        startupProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          failureThreshold: 6
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.service.expose.api.health }}
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: service-port
+          initialDelaySeconds: 15
+          periodSeconds: 10

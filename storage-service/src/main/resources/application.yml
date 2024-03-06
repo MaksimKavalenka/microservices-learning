@@ -36,6 +36,13 @@ flyway:
   database:
     create-if-not-exists: true
 
+infrastructure:
+  authorization-server:
+    alias: authorization-server
+    host: ${application.destination.host}
+    port: 8090
+    url: http://${infrastructure.authorization-server.host}:${infrastructure.authorization-server.port}
+
 management:
   endpoint:
     metrics:
@@ -83,6 +90,11 @@ spring:
     hibernate:
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${infrastructure.authorization-server.url}
   servlet:
     multipart:
       maxFileSize: -1
@@ -126,6 +138,10 @@ aws:
 database:
   destination:
     port: 5405
+
+infrastructure:
+  authorization-server:
+    port: 8090
 
 logging:
   level:
